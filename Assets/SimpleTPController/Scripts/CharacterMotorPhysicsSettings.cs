@@ -32,5 +32,12 @@ namespace ThirdPersonController
         {
             get { return m_CrouchHeightLerpSpeed; }
         }
+
+        [Range(0, 10)]
+        [SerializeField] private float m_GroundStickForceMultiplier = 1f;
+        public float groundStickForceMultiplier
+        {
+            get { return m_GroundStickForceMultiplier; }
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace ThirdPersonController
 
         private CharacterController m_CharacterController;
         private Vector3 m_Motion;
+        private bool m_ResetGroundStickForce;
 
         /// <summary>
         /// Gets a value indicating whether the character is on the ground.
@@ -64,16 +65,24 @@ namespace ThirdPersonController
                 isSprinting = sprint && !isCrouching;
 
                 m_Motion = new Vector3(x, 0, z).normalized * GetDesiredMovementSpeed();
-                m_Motion += Physics.gravity / Time.fixedDeltaTime;
+                m_Motion += Physics.gravity * m_PhysicsSettings.groundStickForceMultiplier;
 
                 if (jump) 
                 {
                     isJumping = true;
                     m_Motion.y = 0;
                 }
+
+                m_ResetGroundStickForce = false;
             }
             else
             {
+                if (!m_ResetGroundStickForce)
+                {
+                    m_Motion.y = 0;
+                    m_ResetGroundStickForce = true;
+                }
+
                 m_Motion += Physics.gravity * Time.fixedDeltaTime;
             }
 
@@ -81,6 +90,7 @@ namespace ThirdPersonController
             m_CharacterController.Move((m_Motion + jumpMotion) * Time.fixedDeltaTime);
             
             isGrounded = m_CharacterController.isGrounded;
+
             if (isGrounded)
             {
                 isJumping = false;
