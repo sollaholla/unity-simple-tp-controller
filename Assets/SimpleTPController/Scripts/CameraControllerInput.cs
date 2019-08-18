@@ -3,7 +3,7 @@
 namespace ThirdPersonController
 {
     [RequireComponent(typeof(CharacterMotor))]
-    public class CameraControllerInput : MonoBehaviour
+    public class CameraControllerInput : MonoBehaviour, ICameraStateController
     {
         [SerializeField] private GameObject m_CameraControllerPrefab = null;
         [SerializeField] private CameraControllerInputSettings m_DefaultSettings = null;
@@ -37,13 +37,10 @@ namespace ThirdPersonController
             m_CameraController.Rotate(
                 Input.GetAxis(m_DefaultSettings.mouseXInput), 
                 Input.GetAxis(m_DefaultSettings.mouseYInput));
-
             transform.eulerAngles = new Vector3(0, m_CameraController.yRotation, 0);
-
-            m_CameraController.SetState(GetCurrentState());
         }
 
-        protected virtual string GetCurrentState()
+        public virtual string GetCurrentState()
         {
             return
                 m_CharacterMotor.isCrouching ? m_DefaultSettings.crouchingStateName : 

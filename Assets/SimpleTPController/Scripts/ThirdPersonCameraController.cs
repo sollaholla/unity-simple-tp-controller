@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace ThirdPersonController
 {
+    /// <summary>
+    /// The follow update mode of the third person camera.
+    /// </summary>
     public enum ThirdPersonCameraFollowMode
     {
         Update,
@@ -12,22 +15,42 @@ namespace ThirdPersonController
         ManualUpdate
     }
 
+    /// <summary>
+    /// A third person camera rig.
+    /// </summary>
     public class ThirdPersonCameraController : MonoBehaviour
     {
+        [Header("Setup")]
         [SerializeField] private Transform m_Target = null;
         [SerializeField] private Camera m_Camera = null;
         [SerializeField] private Transform m_Pivot = null;
+
+        [Header("Settings")]
         [SerializeField] private ThirdPersonCameraFollowMode m_FollowMode = ThirdPersonCameraFollowMode.FixedUpdate;
         [SerializeField] private float m_FieldOfView = 60;
+
+        [Header("Camera States")]
         [SerializeField] private CameraState m_DefaultCameraState = new CameraState("Default");
         [Obsolete("Do not use this field to itterate camera states please use m_RuntimeStates instead.")]
         [SerializeField] private CameraState[] m_CameraStates = new CameraState[] { new CameraState() };
 
+        /// <summary>
+        /// The target x rotation of the pivot.
+        /// </summary>
         public float xRotation { get; private set; }
+
+        /// <summary>
+        /// The target y rotation of the pivot.
+        /// </summary>
         public float yRotation { get; private set; }
+
+        /// <summary>
+        /// The active camera state.
+        /// </summary>
         public CameraState currentState { get; private set; }
 
         private CameraState[] m_RuntimeStates;
+        private ICameraStateController m_StateController;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -42,11 +65,29 @@ namespace ThirdPersonController
         }
 
         /// <summary>
+        /// Called when the script is loaded or a value is changed in the
+        /// inspector (Called in the editor only).
+        /// </summary>
+        protected virtual void OnValidate()
+        {
+            // Doing this for consistancy (e.g. the m_StateController won't be set otherwise, etc.).
+            if (m_Target != null)
+            {
+                SetTarget(m_Target);
+            }
+        }
+
+        /// <summary>
         /// Update is called every frame, if the MonoBehaviour is enabled.
         /// </summary>
         protected virtual void Update()
         {
             UpdateCamera();
+
+            if (m_StateController != null)
+            {
+                SetState(m_StateController.GetCurrentState());
+            }
 
             if (m_FollowMode != ThirdPersonCameraFollowMode.Update)
             {
@@ -111,11 +152,7 @@ namespace ThirdPersonController
             transform.position = m_Target.position;
         }
 
-        /// <summary>
-        /// Sets the current camera state to a state with the given name.
-        /// </summary>
-        /// <param name="stateName">The name of the camera state.</param>
-        public virtual void SetState(string stateName)
+        protected virtual void SetState(string stateName)
         {
             if (currentState.name == stateName)
             {
@@ -151,6 +188,7 @@ namespace ThirdPersonController
         public virtual void SetTarget(Transform target)
         {
             this.m_Target = target;
+            m_StateController = target.GetComponent<ICameraStateController>();
         }
     }
 }
