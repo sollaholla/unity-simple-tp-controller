@@ -62,7 +62,7 @@ namespace ThirdPersonController
             if (isGrounded)
             {
                 isCrouching = crouch;
-                isSprinting = sprint && !isCrouching;
+                isSprinting = sprint && !isCrouching && x != 0 && z != 0;
 
                 m_Motion = new Vector3(x, 0, z).normalized * GetDesiredMovementSpeed();
                 m_Motion += Physics.gravity * m_PhysicsSettings.groundStickForceMultiplier;

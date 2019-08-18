@@ -61,7 +61,7 @@ MonoBehaviour:
   m_CameraStates:
   - m_Name: Sprinting
     m_CameraOffset: {x: 0.58, y: 0.68, z: -1.62}
-    m_FieldOfViewMultiplier: 1.15
+    m_FieldOfViewMultiplier: 1.1
     m_SensitivityMultiplier: 1
     m_MinimumXAngle: -70
     m_MaximumXAngle: 70
