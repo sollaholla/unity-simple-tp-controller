@@ -49,19 +49,19 @@ namespace ThirdPersonController.InventorySystem
         /// Add an inventory item instance to the inventory.
         /// </summary>
         /// <param name="itemInstance">The item instance.</param>
-        public virtual void Add(InventoryItemInstance itemInstance)
+        public virtual bool Add(InventoryItemInstance itemInstance)
         {
             var data = new ItemDataInstance(itemInstance);
             if (data.stack <= 0)
             {
-                return;
+                return false;
             }
 
             var collection = GetBestCollectionForItem(data);
 
             // Combine with existing items in the inventory.
             var existingItems = collection.items
-                .Where(x => x.stack < x.item.maxStack && x.item.id == data.item.id)
+                .Where(x => x != null && x.stack < x.item.maxStack && x.item.id == data.item.id)
                 .ToArray();
 
             if (existingItems.Length > 0)
@@ -77,16 +77,13 @@ namespace ThirdPersonController.InventorySystem
                 }
             }
 
-            // Item has been emptied.
-            if (data.stack == 0)
-            {
-                Destroy(itemInstance.gameObject);
-                return;
-            }
+            Destroy(itemInstance.gameObject);
 
             // Insert this item into the first available (empty) slot.
             collection.Insert(data);
             itemAdded?.Invoke(data, collection);
+
+            return true;
         }
 
         /// <summary>
