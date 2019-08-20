@@ -1,0 +1,11 @@
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Pickup Handler 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+- FixedUpdate: Update the physics step to figure out what objects are within our sphere of influence.
+- GetNearestPickup: Gets the nearest pickup object within our sphere of influence.
+- Pickup: Get the nearest pickup object within our sphere of influence and add it to the inventory.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+Pickup
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+- OnHover: Called when an object is within the PickupHandler's sphere of influece (can be overriden)
