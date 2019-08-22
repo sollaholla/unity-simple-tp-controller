@@ -113,11 +113,6 @@ namespace ThirdPersonController.InventorySystem
         /// <returns></returns>
         public bool SlotAllows(ItemDataInstance itemData, uint slot)
         {
-            if (m_Items[slot] != null && m_Items[slot].stack > m_Items[slot].item.maxStack)
-            {
-                return false;
-            }
-
             var slotMask = m_SlotMasks.FirstOrDefault(x => x.slot == slot);
             if (slotMask != null)
             {
