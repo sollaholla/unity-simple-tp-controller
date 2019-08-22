@@ -10,6 +10,7 @@ namespace ThirdPersonController.InventorySystem
     public class Inventory : MonoBehaviour
     {
         [SerializeField] private ItemCollection[] m_ItemCollections = null;
+        [SerializeField] private Vector3 m_DropOffset = new Vector3(0, 1, 1);
 
         /// <summary>
         /// The item collections within this inventory.
@@ -92,12 +93,12 @@ namespace ThirdPersonController.InventorySystem
         /// <param name="itemData">The items data instance.</param>
         /// <param name="dropPoint">The point at which to drop the item.</param>
         /// <param name="dropRotation">The rotation of the dropped item.</param>
-        public virtual GameObject DropItem(ItemDataInstance itemData, Vector3 dropPoint, Quaternion dropRotation)
+        public virtual GameObject DropItem(ItemDataInstance itemData)
         {
             var fromCollection = itemCollections.FirstOrDefault(x => x.Contains(itemData));
             fromCollection.SetSlot(null, (uint)fromCollection.GetSlot(itemData));
 
-            var objInstance = Instantiate(itemData.item.dropObject, dropPoint, dropRotation);
+            var objInstance = Instantiate(itemData.item.dropObject, transform.TransformDirection(m_DropOffset), transform.rotation);
             itemDropped?.Invoke(objInstance);
             
             return objInstance;
@@ -114,7 +115,7 @@ namespace ThirdPersonController.InventorySystem
         }
 
         /// <summary>
-        /// Move an item from its slot in its current collection, to the target collection in the given slot.
+        /// Move an item from its current slot in its current collection to the target collection in the target slot.
         /// </summary>
         /// <param name="itemData">The item to move.</param>
         /// <param name="collection">The collection to move it to.</param>
@@ -126,24 +127,33 @@ namespace ThirdPersonController.InventorySystem
                 return;
             }
 
+            if (!collection.SlotAllows(itemData, slot))
+            {
+                return;
+            }
+
             var fromCollection = itemCollections.FirstOrDefault(x => x.Contains(itemData));
             var fromSlot = fromCollection.GetSlot(itemData);
 
             var existingItem = collection.items.ElementAt((int)slot);
             if (existingItem != null)
             {
-                if (existingItem.item.id == itemData.item.id && existingItem.stack < existingItem.item.maxStack)
+                if (collection.SlotAllows(existingItem, slot) && 
+                    fromCollection.SlotAllows(existingItem, (uint)fromSlot))
                 {
-                    Combine(itemData, existingItem);
-                }
-                else
-                {
-                    Swap(itemData, fromCollection, existingItem, collection);
+                    if (existingItem.item.id == itemData.item.id && existingItem.stack < existingItem.item.maxStack)
+                    {
+                        Combine(itemData, existingItem);
+                    }
+                    else
+                    {
+                        Swap(itemData, fromCollection, existingItem, collection);
+                    }
                 }
             }
             else
             {
-                collection.SetSlot(null, (uint)fromSlot);
+                fromCollection.SetSlot(null, (uint)fromSlot);
                 collection.SetSlot(itemData, slot);
             }
         }
@@ -192,6 +202,15 @@ namespace ThirdPersonController.InventorySystem
                 .FindAll(m_ItemCollections, x => x.AllowItem(itemData))
                 .OrderBy(x => x.priority)
                 .FirstOrDefault();
+        }
+        
+        /// <summary>
+        /// Gets first the collection with the given name.
+        /// </summary>
+        /// <param name="collectionName">The collection name.</param>
+        public virtual ItemCollection GetCollection(string collectionName)
+        {
+            return m_ItemCollections.FirstOrDefault(x => x.name == collectionName);
         }
     }
 }

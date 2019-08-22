@@ -6,6 +6,7 @@ namespace ThirdPersonController.InventorySystem
     /// <summary>
     /// An item data instance.
     /// </summary>
+    [System.Serializable]
     public class ItemDataInstance
     {
         /// <summary>

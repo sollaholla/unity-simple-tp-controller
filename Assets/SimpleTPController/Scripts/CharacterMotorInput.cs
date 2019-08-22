@@ -30,15 +30,15 @@ namespace ThirdPersonController
         protected virtual void Update()
         {
             m_MovementInput = new Vector3(
-                Input.GetAxis(m_InputSettings.horizontalInput), 0,
-                Input.GetAxis(m_InputSettings.verticalInput));
+                InputManager.GetAxis(m_InputSettings.horizontalInput), 0,
+                InputManager.GetAxis(m_InputSettings.verticalInput));
 
             m_MovementInput = transform.TransformDirection(m_MovementInput);
 
-            m_CrouchInput = Input.GetButton(m_InputSettings.crouchInput);
-            m_SprintInput = Input.GetButton(m_InputSettings.sprintInput);
+            m_CrouchInput = InputManager.GetButton(m_InputSettings.crouchInput);
+            m_SprintInput = InputManager.GetButton(m_InputSettings.sprintInput);
             
-            if (Input.GetButtonDown(m_InputSettings.jumpInput))
+            if (InputManager.GetButtonDown(m_InputSettings.jumpInput))
             {
                 m_JumpInput = true;
             }

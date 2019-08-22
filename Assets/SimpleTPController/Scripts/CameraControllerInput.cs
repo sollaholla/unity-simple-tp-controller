@@ -35,8 +35,8 @@ namespace ThirdPersonController
         protected virtual void Update()
         {
             m_CameraController.Rotate(
-                Input.GetAxis(m_DefaultSettings.mouseXInput), 
-                Input.GetAxis(m_DefaultSettings.mouseYInput));
+                InputManager.GetAxis(m_DefaultSettings.mouseXInput), 
+                InputManager.GetAxis(m_DefaultSettings.mouseYInput));
             transform.eulerAngles = new Vector3(0, m_CameraController.yRotation, 0);
         }
 

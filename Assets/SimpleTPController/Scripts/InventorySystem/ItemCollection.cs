@@ -16,6 +16,7 @@ namespace ThirdPersonController.InventorySystem
         [SerializeField] private int m_MaxItems = 10;
         [Tooltip("If no categories are defined, we will allow any item into this collection.")]
         [SerializeField] private ItemCategory[] m_Categories = null;
+        [SerializeField] private ItemSlotMask[] m_SlotMasks = null;
 
         private ItemDataInstance[] m_Items;
 
@@ -102,6 +103,31 @@ namespace ThirdPersonController.InventorySystem
         public bool AllowsCategory(ItemCategory category)
         {
             return m_Categories.Length <= 0 || m_Categories.Any(x => x == category);
+        }
+
+        /// <summary>
+        /// True if the given item is allowed in the given slot.
+        /// </summary>
+        /// <param name="itemData">The item data.</param>
+        /// <param name="slot">The item slot.</param>
+        /// <returns></returns>
+        public bool SlotAllows(ItemDataInstance itemData, uint slot)
+        {
+            if (m_Items[slot] != null && m_Items[slot].stack > m_Items[slot].item.maxStack)
+            {
+                return false;
+            }
+
+            var slotMask = m_SlotMasks.FirstOrDefault(x => x.slot == slot);
+            if (slotMask != null)
+            {
+                if (!slotMask.itemCategories.Contains(itemData.item.category))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>

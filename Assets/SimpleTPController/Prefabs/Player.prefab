@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 2584507212376744125}
   - component: {fileID: 4691456010463195466}
   - component: {fileID: 8280005537261072766}
+  - component: {fileID: 9134694629455091355}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -170,9 +171,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ItemCollections:
   - m_Name: Items
-    m_Priority: 999
+    m_Priority: -999
     m_MaxItems: 15
     m_Categories: []
+    m_SlotMasks: []
+  - m_Name: Character
+    m_Priority: 0
+    m_MaxItems: 5
+    m_Categories:
+    - {fileID: 11400000, guid: 32bd07074af53fb499e35f83848500bb, type: 2}
+    - {fileID: 11400000, guid: 735a89059ca4d4443a7c244a5309bba9, type: 2}
+    - {fileID: 11400000, guid: 6e5c477e44e9b3b42ada9904539d3c1c, type: 2}
+    - {fileID: 11400000, guid: 4db47a773de73e448bc137171eca29cb, type: 2}
+    - {fileID: 11400000, guid: d891ba013b559044fa619b6ddf6b90fe, type: 2}
+    m_SlotMasks:
+    - m_SlotIndex: 0
+      m_ItemCategory:
+      - {fileID: 11400000, guid: d891ba013b559044fa619b6ddf6b90fe, type: 2}
+    - m_SlotIndex: 1
+      m_ItemCategory:
+      - {fileID: 11400000, guid: 32bd07074af53fb499e35f83848500bb, type: 2}
+    - m_SlotIndex: 2
+      m_ItemCategory:
+      - {fileID: 11400000, guid: 6e5c477e44e9b3b42ada9904539d3c1c, type: 2}
+    - m_SlotIndex: 3
+      m_ItemCategory:
+      - {fileID: 11400000, guid: 4db47a773de73e448bc137171eca29cb, type: 2}
+    - m_SlotIndex: 4
+      m_ItemCategory:
+      - {fileID: 11400000, guid: 735a89059ca4d4443a7c244a5309bba9, type: 2}
 --- !u!114 &4691456010463195466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,6 +230,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_PickupInput: Pickup
+--- !u!114 &9134694629455091355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5986725704378417073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d4c708c0068a6a48853bcebf27c6104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InventoryUIPrefab: {fileID: 4566002329378365853, guid: f3579889ed382d74da3139519fdd4f73,
+    type: 3}
 --- !u!1001 &5986725704029402213
 PrefabInstance:
   m_ObjectHideFlags: 0
