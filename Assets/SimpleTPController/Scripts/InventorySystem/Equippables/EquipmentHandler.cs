@@ -55,7 +55,7 @@ namespace ThirdPersonController.InventorySystem
             var itemInstances = GetComponentsInChildren<IItemInstance>(true);
             foreach (var itemInstance in itemInstances)
             {
-                visuals.Add(new VisualEquipment(itemInstance.baseItem, itemInstance.transform));
+                visuals.Add(new VisualEquipment(itemInstance.baseData, itemInstance.transform));
             }
             m_EquipmentVisuals = visuals.ToArray();
         }

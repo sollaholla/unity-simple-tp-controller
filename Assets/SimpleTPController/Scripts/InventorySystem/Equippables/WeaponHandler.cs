@@ -1,23 +1,31 @@
+using System;
 using UnityEngine;
 
 namespace ThirdPersonController.InventorySystem
 {
     [RequireComponent(typeof(EquipmentHandler))]
     [RequireComponent(typeof(Inventory))]
+    [RequireComponent(typeof(CharacterMotor))]
     public class WeaponHandler : MonoBehaviour
     {
         private EquipmentHandler m_EquipmentHandler;
         private Inventory m_Inventory;
+        private CharacterMotor m_CharacterMotor;
 
         /// <summary>
         /// The currently equipped (primary) weapon.
         /// </summary>
-        public WeaponItemInstance primaryWeapon { get; private set; }
+        public IWeaponItemInstance primaryWeapon { get; private set; }
 
         /// <summary>
         /// The currently equipped (secondary) weapon.
         /// </summary>
-        public WeaponItemInstance secondaryWeapon { get; private set; }
+        public IWeaponItemInstance secondaryWeapon { get; private set; }
+
+        /// <summary>
+        /// Called when a weapon is used.
+        /// </summary>
+        public event Action<IWeaponItemInstance> weaponUsed;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -29,6 +37,7 @@ namespace ThirdPersonController.InventorySystem
             m_EquipmentHandler.unequipped += OnUnEquippedItem;
             
             m_Inventory = GetComponent<Inventory>();
+            m_CharacterMotor = GetComponent<CharacterMotor>();
         }
 
         /// <summary>
@@ -42,7 +51,16 @@ namespace ThirdPersonController.InventorySystem
                 return;
             }
 
-            primaryWeapon.PrimaryUse(useRay);
+            if (!m_CharacterMotor.isGrounded && !primaryWeapon.weaponData.canUseAirially)
+            {
+                return;
+            }
+
+            if (primaryWeapon.PrimaryUse(useRay))
+            {
+                weaponUsed?.Invoke(primaryWeapon);
+                m_CharacterMotor.MoveLock(primaryWeapon.weaponData.movementCooldown);
+            }
         }
 
         /// <summary>
@@ -60,44 +78,15 @@ namespace ThirdPersonController.InventorySystem
 
         protected virtual void OnEquippedItem(IEquippableItemInstance item)
         {
-            var weaponItem = item as WeaponItemInstance;
+            var weaponItem = item as IWeaponItemInstance;
             if (weaponItem == null)
             {
                 return;
             }
-            
-            switch(weaponItem.item.occupation)
-            {
-                case WeaponOccupation.OneHanded:
-                    if (primaryWeapon != null && primaryWeapon.item.occupation == WeaponOccupation.TwoHanded)
-                    {
-                        m_Inventory.AutoMoveItem(primaryWeapon.itemData);
-                    }
-                    if (secondaryWeapon != null && secondaryWeapon.item.occupation == WeaponOccupation.TwoHanded)
-                    {
-                        m_Inventory.AutoMoveItem(secondaryWeapon.itemData);
-                    }
-                    break;
-                case WeaponOccupation.TwoHanded:
-                    switch(weaponItem.item.kind)
-                    {
-                        case WeaponKind.Primary:
-                            if (secondaryWeapon != null)
-                            {
-                                m_Inventory.AutoMoveItem(secondaryWeapon.itemData);
-                            }
-                            break;
-                        case WeaponKind.Secondary:
-                            if (primaryWeapon != null)
-                            {
-                                m_Inventory.AutoMoveItem(primaryWeapon.itemData);
-                            }
-                            break;
-                    }
-                    break;
-            }
 
-            switch (weaponItem.item.kind)
+            HandleWeaponOccupation(weaponItem);
+
+            switch (weaponItem.weaponData.kind)
             {
                 case WeaponKind.Primary:
                     SetPrimaryWeapon(weaponItem);
@@ -108,9 +97,57 @@ namespace ThirdPersonController.InventorySystem
             }
         }
 
+        // This method essentially clears the players weapon slots
+        // depending on the weapon that was just equipped.
+        // (e.g. removing a shield when equipping a two handed weapon)
+        private void HandleWeaponOccupation(IWeaponItemInstance weaponItem)
+        {
+            switch (weaponItem.weaponData.occupation)
+            {
+                case WeaponOccupation.OneHanded:
+                    HandleOneHanded(primaryWeapon);
+                    HandleOneHanded(secondaryWeapon);
+                    break;
+                case WeaponOccupation.TwoHanded:
+                    switch (weaponItem.weaponData.kind)
+                    {
+                        case WeaponKind.Primary:
+                            MoveWeapon(secondaryWeapon);
+                            break;
+                        case WeaponKind.Secondary:
+                            MoveWeapon(primaryWeapon);
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        private void HandleOneHanded(IWeaponItemInstance currentWeapon)
+        {
+            if (currentWeapon == null)
+            {
+                return;
+            }
+
+            if (currentWeapon.weaponData.occupation == WeaponOccupation.TwoHanded)
+            {
+                MoveWeapon(currentWeapon);
+            }
+        }
+
+        private void MoveWeapon(IWeaponItemInstance weaponItem)
+        {
+            if (weaponItem == null)
+            {
+                return;
+            }
+
+            m_Inventory.AutoMoveItem(weaponItem.instanceData, false);
+        }
+
         protected virtual void OnUnEquippedItem(IEquippableItemInstance item)
         {
-            var weaponItem = item as WeaponItemInstance;
+            var weaponItem = item as IWeaponItemInstance;
             if (weaponItem == null)
             {
                 return;
@@ -126,12 +163,12 @@ namespace ThirdPersonController.InventorySystem
             }
         }
 
-        public virtual void SetPrimaryWeapon(WeaponItemInstance primaryWeapon)
+        public virtual void SetPrimaryWeapon(IWeaponItemInstance primaryWeapon)
         {
             this.primaryWeapon = primaryWeapon;
         }
 
-        public virtual void SetSecondaryWeapon(WeaponItemInstance secondaryWeapon)
+        public virtual void SetSecondaryWeapon(IWeaponItemInstance secondaryWeapon)
         {
             this.secondaryWeapon = secondaryWeapon;
         }

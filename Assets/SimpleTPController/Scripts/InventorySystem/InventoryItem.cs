@@ -8,6 +8,7 @@ namespace ThirdPersonController.InventorySystem
     [CreateAssetMenu(menuName = "Inventory/InventoryItem")]
     public class InventoryItem : InventoryIdentity
     {
+        [Header("Metadata")]
         [SerializeField] private Sprite m_Icon = null;
 
         /// <summary>

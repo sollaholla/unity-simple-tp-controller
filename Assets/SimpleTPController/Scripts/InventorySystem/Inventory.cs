@@ -52,7 +52,7 @@ namespace ThirdPersonController.InventorySystem
         /// <param name="itemInstance">The item instance.</param>
         public virtual bool Add(IItemInstance itemInstance)
         {
-            var data = new ItemDataInstance(itemInstance.baseItem, itemInstance.stack);
+            var data = new ItemDataInstance(itemInstance.baseData, itemInstance.stack);
             if (data.stack <= 0)
             {
                 return false;
@@ -98,7 +98,7 @@ namespace ThirdPersonController.InventorySystem
         /// Moves the item to the next available collection, otherwise drops the item.
         /// </summary>
         /// <param name="itemData">The item data.</param>
-        public virtual void AutoMoveItem(ItemDataInstance itemData)
+        public virtual void AutoMoveItem(ItemDataInstance itemData, bool combineWithItems = true)
         {
             var collection = GetBestCollectionForItem(itemData);
             var currentSlot = (uint)m_ItemCollections.FirstOrDefault(x => x.Contains(itemData)).GetSlot(itemData);
@@ -108,7 +108,11 @@ namespace ThirdPersonController.InventorySystem
             }
             else
             {
-                CombineWithExistingItems(itemData, collection);
+                if (combineWithItems)
+                {
+                    CombineWithExistingItems(itemData, collection);
+                }
+
                 if (itemData.stack > 0)
                 {
                     if (collection.IsFullyOccupied())
@@ -186,8 +190,7 @@ namespace ThirdPersonController.InventorySystem
 
             if (existingItem != null)
             {
-                if (collection.SlotAllows(existingItem, slot) && 
-                    fromCollection.SlotAllows(existingItem, (uint)fromSlot))
+                if (collection.SlotAllows(existingItem, slot) && fromCollection.SlotAllows(existingItem, (uint)fromSlot))
                 {
                     if (existingItem.item.id == itemData.item.id && existingItem.stack < existingItem.item.maxStack)
                     {
@@ -247,7 +250,7 @@ namespace ThirdPersonController.InventorySystem
         public virtual ItemCollection GetBestCollectionForItem(ItemDataInstance itemData)
         {
             return Array
-                .FindAll(m_ItemCollections, x => x.AllowItem(itemData))
+                .FindAll(m_ItemCollections, x => x.AllowItem(itemData) && !x.IsFull())
                 .Where(x => !x.Contains(itemData))
                 .OrderBy(x => x.priority)
                 .FirstOrDefault();

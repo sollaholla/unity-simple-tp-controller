@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 796acd53e90609a44b7b99afda61f85a, type: 3}
+  m_Script: {fileID: 11500000, guid: a268bccb1e9f8d8458e18c135a21984c, type: 3}
   m_Name: Item_Sword
   m_EditorClassIdentifier: 
-  m_ID: 7bc32ff3-4f48-43c4-b409-41b83ab1812a
+  m_ID: ae629003-1e51-4667-8d40-c2602ef50d86
   m_DisplayName: Sword
   m_Icon: {fileID: 0}
   m_MaxStack: 1
@@ -20,3 +20,10 @@ MonoBehaviour:
     type: 3}
   m_Category: {fileID: 11400000, guid: 6dfaf90b85fc1794786d963f1b8d0c54, type: 2}
   m_IKHand: 0
+  m_AnimationID: 1
+  m_AttackAnimationParam: Attack
+  m_PrimaryCooldown: 0.75
+  m_MovementCooldown: 0.5
+  m_WeaponKind: 0
+  m_WeaponOccupation: 0
+  m_CanUseAirally: 0

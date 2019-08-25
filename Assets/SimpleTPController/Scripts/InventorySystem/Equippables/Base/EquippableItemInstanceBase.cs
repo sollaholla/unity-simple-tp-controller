@@ -15,7 +15,12 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// The inventory item data instance for this equippable item.
         /// </summary>
-        public ItemDataInstance itemData { get; private set; }
+        public ItemDataInstance instanceData { get; private set; }
+
+        /// <summary>
+        /// The equippable item metadata.
+        /// </summary>
+        public EquippableInventoryItem equippableData => item;
 
         /// <summary>
         /// Callback for when this equippable item is equipped.
@@ -24,7 +29,7 @@ namespace ThirdPersonController.InventorySystem
         public virtual void OnEquipped(EquipmentHandler handler, ItemDataInstance data)
         {
             isEquipped = true;
-            this.itemData = data;
+            this.instanceData = data;
         }
 
         /// <summary>
@@ -34,7 +39,7 @@ namespace ThirdPersonController.InventorySystem
         public virtual void OnUnEquipped(EquipmentHandler handler)
         {
             isEquipped = false;
-            this.itemData = null;
+            this.instanceData = null;
         }
     }
 }

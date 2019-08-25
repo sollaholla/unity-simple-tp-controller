@@ -1,5 +1,4 @@
 using UnityEngine;
-using static ThirdPersonController.InventorySystem.WeaponItemInstance;
 
 namespace ThirdPersonController.InventorySystem
 {
@@ -21,8 +20,7 @@ namespace ThirdPersonController.InventorySystem
         TwoHanded
     }
 
-    [CreateAssetMenu(menuName = "Inventory/WeaponItem")]
-    public class WeaponInventoryItem : EquippableInventoryItem
+    public abstract class WeaponInventoryItem : EquippableInventoryItem
     {
         private enum WeaponIKHand
         {
@@ -30,6 +28,7 @@ namespace ThirdPersonController.InventorySystem
             Right
         }
 
+        [Header("Animation")]
         [SerializeField] private WeaponIKHand m_IKHand = WeaponIKHand.Left;
 
         /// <summary>
@@ -49,7 +48,14 @@ namespace ThirdPersonController.InventorySystem
         {
             get { return m_AnimationID; }
         }
+
+        [SerializeField] private string m_AttackAnimationParam = "Attack";
+        public string attackAnimationParam
+        {
+            get { return m_AttackAnimationParam; }
+        }
         
+        [Header("Cooldowns")]
         [SerializeField] private float m_PrimaryCooldown = 0.75f;
 
         /// <summary>
@@ -61,16 +67,45 @@ namespace ThirdPersonController.InventorySystem
             get { return m_PrimaryCooldown; }
         }
 
+        [SerializeField] private float m_MovementCooldown = 1f;
+
+        /// <summary>
+        /// Once this item is successfuly used this will freeze the characters movement for the given time (seconds).
+        /// </summary>
+        public float movementCooldown
+        {
+            get { return m_MovementCooldown; }
+        }
+
+        [Header("Settings/Other")]
         [SerializeField] private WeaponKind m_WeaponKind = WeaponKind.Primary;
+
+        /// <summary>
+        /// The kind of weapon this is (primary, secondary)
+        /// </summary>
         public WeaponKind kind
         {
             get { return m_WeaponKind; }
         }
 
         [SerializeField] private WeaponOccupation m_WeaponOccupation = WeaponOccupation.OneHanded;
+        
+        /// <summary>
+        /// This weapons space occupation.
+        /// </summary>
         public WeaponOccupation occupation
         {
             get { return m_WeaponOccupation; }
+        }
+
+        [SerializeField] private bool m_CanUseAirally = false;
+
+        /// <summary>
+        /// True if we can use this weapon in the air.
+        /// </summary>
+        public bool canUseAirially
+        {
+            get { return m_CanUseAirally; }
         }
     }
 }

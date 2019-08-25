@@ -18,7 +18,7 @@ namespace ThirdPersonController
     /// <summary>
     /// A third person camera rig.
     /// </summary>
-    public class ThirdPersonCameraController : MonoBehaviour
+    public class ThirdPersonCameraController : MonoBehaviour, ICameraController
     {
         [Header("Setup")]
         [SerializeField] private Transform m_Target = null;
@@ -49,6 +49,8 @@ namespace ThirdPersonController
         /// </summary>
         public CameraState currentState { get; private set; }
 
+        public Camera cam => m_Camera;
+
         private CameraState[] m_RuntimeStates;
         private ICameraStateController m_StateController;
 
@@ -59,9 +61,9 @@ namespace ThirdPersonController
         {
             currentState = m_DefaultCameraState;
 
-            #pragma warning disable 612,618
-            m_RuntimeStates = m_CameraStates.Concat(new [] { m_DefaultCameraState }).ToArray();
-            #pragma warning restore 612,618
+#pragma warning disable 612, 618
+            m_RuntimeStates = m_CameraStates.Concat(new[] { m_DefaultCameraState }).ToArray();
+#pragma warning restore 612, 618
         }
 
         /// <summary>
@@ -94,7 +96,7 @@ namespace ThirdPersonController
                 return;
             }
 
-            DoUpdate();
+            ManualUpdate();
         }
 
         /// <summary>
@@ -107,7 +109,7 @@ namespace ThirdPersonController
                 return;
             }
 
-            DoUpdate();
+            ManualUpdate();
         }
 
         /// <summary>
@@ -121,10 +123,10 @@ namespace ThirdPersonController
                 return;
             }
 
-            DoUpdate();
+            ManualUpdate();
         }
 
-        public virtual void DoUpdate()
+        public virtual void ManualUpdate()
         {
             FollowTarget();
         }
@@ -132,8 +134,8 @@ namespace ThirdPersonController
         protected virtual void UpdateCamera()
         {
             m_Camera.transform.localPosition = Vector3.Lerp(
-                m_Camera.transform.localPosition, 
-                currentState.cameraOffset, 
+                m_Camera.transform.localPosition,
+                currentState.cameraOffset,
                 currentState.cameraPositionLerpRate * Time.deltaTime);
 
             m_Camera.fieldOfView = Mathf.Lerp(

@@ -16,7 +16,7 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// The base inventory item.
         /// </summary>
-        public InventoryItem baseItem => m_Item;
+        public InventoryItem baseData => m_Item;
 
         /// <summary>
         /// Inveoked when the stack has changed.

@@ -5,6 +5,7 @@ namespace ThirdPersonController.InventorySystem
 {
     public class InventoryIdentity : ScriptableObject
     {
+        [Header("Identification")]
         [SerializeField] private string m_ID = System.Guid.NewGuid().ToString();
         public string id
         {

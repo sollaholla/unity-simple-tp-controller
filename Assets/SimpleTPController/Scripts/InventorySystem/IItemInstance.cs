@@ -10,7 +10,7 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// The base item type.
         /// </summary>
-        InventoryItem baseItem { get; }
+        InventoryItem baseData { get; }
 
         /// <summary>
         /// The <see cref="GameObject"> associated with this item instance.

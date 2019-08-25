@@ -3,7 +3,7 @@ namespace ThirdPersonController.InventorySystem
     /// <summary>
     /// Defines an equippable item instance.
     /// </summary>
-    public interface IEquippableItemInstance
+    public interface IEquippableItemInstance : IItemInstance
     {
         /// <summary>
         /// True if this item is equipped.
@@ -13,7 +13,13 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// The item data instance for this equippable item.
         /// </summary>
-        ItemDataInstance itemData { get; }
+        ItemDataInstance instanceData { get; }
+
+        /// <summary>
+        /// The equippable item metadata.
+        /// </summary>
+        /// <value></value>
+        EquippableInventoryItem equippableData { get; }
 
         /// <summary>
         /// Called when this item has been equipped by the handler.

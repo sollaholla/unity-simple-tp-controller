@@ -15,6 +15,7 @@ namespace ThirdPersonController
         private CharacterController m_CharacterController;
         private Vector3 m_Motion;
         private bool m_ResetGroundStickForce;
+        private float m_LockTimer;
 
         /// <summary>
         /// Gets a value indicating whether the character is on the ground.
@@ -35,6 +36,12 @@ namespace ThirdPersonController
         /// Gets a value indicating whether the character is jumping.
         /// </summary>
         public bool isJumping { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether the character is movement locked.
+        /// </summary>
+        /// <value></value>
+        public bool isMovementLocked => Time.fixedTime < m_LockTimer;
 
         /// <summary>
         /// Gets the velocity of the <see cref="CharacterController" />
@@ -61,6 +68,11 @@ namespace ThirdPersonController
         {
             if (isGrounded)
             {
+                if (isMovementLocked)
+                {
+                    x = z = 0;
+                }
+
                 isCrouching = crouch;
                 isSprinting = sprint && !isCrouching && x != 0 && z != 0;
 
@@ -141,6 +153,15 @@ namespace ThirdPersonController
                 isSprinting ? m_MovementSettings.sprintSpeed : 
                 isCrouching ? m_MovementSettings.crouchSpeed : 
                 m_MovementSettings.walkSpeed;
+        }
+
+        /// <summary>
+        /// Stun/movement locks the character for the given period of time.
+        /// </summary>
+        /// <param name="time">The time period.</param>
+        public virtual void MoveLock(float time)
+        {
+            m_LockTimer = Time.fixedTime + time;
         }
     }
 }

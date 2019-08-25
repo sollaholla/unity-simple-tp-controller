@@ -226,11 +226,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5780616815016611418}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9189a47e469baed46b2864b22f732d3f, type: 3}
+  m_Script: {fileID: 11500000, guid: 3b031239cced62542a1b869dad4ab2aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Item: {fileID: 11400000, guid: 59a4d5bc150ec0448a0d60c92e28bfd8, type: 2}
-  m_IKPoint: {fileID: 0}
 --- !u!54 &4493133422489165125
 Rigidbody:
   m_ObjectHideFlags: 0

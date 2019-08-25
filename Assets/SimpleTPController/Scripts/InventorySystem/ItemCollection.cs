@@ -83,11 +83,6 @@ namespace ThirdPersonController.InventorySystem
         /// <param name="itemData">The item data.</param>
         public virtual bool AllowItem(ItemDataInstance itemData)
         {
-            if (IsFull())
-            {
-                return false;
-            }
-            
             if (!AllowsCategory(itemData.item.category))
             {
                 return false;

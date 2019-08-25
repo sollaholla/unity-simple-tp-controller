@@ -3,13 +3,17 @@
 namespace ThirdPersonController
 {
     [RequireComponent(typeof(CharacterMotor))]
-    public class CameraControllerInput : MonoBehaviour, ICameraStateController
+    public class CameraControllerInput : MonoBehaviour, ICameraStateController, ICameraControllerInput
     {
         [SerializeField] private GameObject m_CameraControllerPrefab = null;
         [SerializeField] private CameraControllerInputSettings m_DefaultSettings = null;
 
-        private ThirdPersonCameraController m_CameraController;
         private CharacterMotor m_CharacterMotor;
+
+        /// <summary>
+        /// The current camera controller.
+        /// </summary>
+        public ICameraController cameraController { get; private set; }
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -25,8 +29,8 @@ namespace ThirdPersonController
         /// </summary>
         protected virtual void Start()
         {
-            m_CameraController = Instantiate(m_CameraControllerPrefab).GetComponent<ThirdPersonCameraController>();
-            m_CameraController.SetTarget(transform);
+            cameraController = Instantiate(m_CameraControllerPrefab).GetComponent<ICameraController>();
+            cameraController.SetTarget(transform);
         }
 
         /// <summary>
@@ -34,16 +38,16 @@ namespace ThirdPersonController
         /// </summary>
         protected virtual void Update()
         {
-            m_CameraController.Rotate(
-                InputManager.GetAxis(m_DefaultSettings.mouseXInput), 
+            cameraController.Rotate(
+                InputManager.GetAxis(m_DefaultSettings.mouseXInput),
                 InputManager.GetAxis(m_DefaultSettings.mouseYInput));
-            transform.eulerAngles = new Vector3(0, m_CameraController.yRotation, 0);
+            transform.eulerAngles = new Vector3(0, cameraController.yRotation, 0);
         }
 
         public virtual string GetCurrentState()
         {
             return
-                m_CharacterMotor.isCrouching ? m_DefaultSettings.crouchingStateName : 
+                m_CharacterMotor.isCrouching ? m_DefaultSettings.crouchingStateName :
                 m_CharacterMotor.isSprinting ? m_DefaultSettings.sprintingStateName :
                 m_DefaultSettings.defaultStateName;
         }
