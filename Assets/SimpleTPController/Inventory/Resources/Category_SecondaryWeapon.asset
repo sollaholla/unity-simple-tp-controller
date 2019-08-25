@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cc54bdeae4506049b4f17b770a0282d, type: 3}
-  m_Name: Category_Hands
+  m_Name: Category_SecondaryWeapon
   m_EditorClassIdentifier: 
-  m_ID: 74a11e8b-c18b-4ee9-913a-8d1f5d32c990
-  m_DisplayName: Hands
+  m_ID: 1f8c3669-962f-46dc-89fd-0556580edcc3
+  m_DisplayName: Secondary Weapon

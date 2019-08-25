@@ -133,6 +133,11 @@ namespace ThirdPersonController.InventorySystem
             return items.All(x => x != null && x.stack == x.item.maxStack);
         }
 
+        public virtual bool IsFullyOccupied()
+        {
+            return items.All(x => x != null);
+        }
+
         /// <summary>
         /// Sets the item in the given slot.
         /// </summary>
@@ -148,15 +153,22 @@ namespace ThirdPersonController.InventorySystem
         /// Insert the given item data into the inventory items in the first empty slot.
         /// </summary>
         /// <param name="itemData">The item data.</param>
-        public virtual void Insert(ItemDataInstance itemData)
+        public virtual bool Insert(ItemDataInstance itemData)
         {
-            if (IsFull())
+            if (itemData.stack <= 0)
             {
-                return;
+                return false;
+            }
+
+            if (IsFullyOccupied())
+            {
+                return false;
             }
 
             int index = GetFirstEmptySlot();
             SetSlot(itemData, (uint)index);
+
+            return true;
         }
 
         /// <summary>

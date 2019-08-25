@@ -10,6 +10,12 @@ namespace ThirdPersonController.InventorySystem
         {
             get { return m_ID; }
         }
+
+        [SerializeField] private string m_DisplayName = null;
+        public string displayName
+        {
+            get { return m_DisplayName; }
+        }
         
         public static InventoryIdentity LoadFromResources(string id)
         {

@@ -50,17 +50,32 @@ namespace ThirdPersonController.InventorySystem
         /// Add an inventory item instance to the inventory.
         /// </summary>
         /// <param name="itemInstance">The item instance.</param>
-        public virtual bool Add(InventoryItemInstance itemInstance)
+        public virtual bool Add(IItemInstance itemInstance)
         {
-            var data = new ItemDataInstance(itemInstance);
+            var data = new ItemDataInstance(itemInstance.baseItem, itemInstance.stack);
             if (data.stack <= 0)
             {
                 return false;
             }
 
             var collection = GetBestCollectionForItem(data);
+            CombineWithExistingItems(data, collection);
+            Destroy(itemInstance.gameObject);
 
-            // Combine with existing items in the inventory.
+            // Insert this item into the first available (empty) slot.
+            collection.Insert(data);
+            itemAdded?.Invoke(data, collection);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Distributes the item data among existing items within the target collection.
+        /// </summary>
+        /// <param name="data">The item data instance.</param>
+        /// <param name="collection">The target collection.</param>
+        protected virtual void CombineWithExistingItems(ItemDataInstance data, ItemCollection collection)
+        {
             var existingItems = collection.items
                 .Where(x => x != null && x.stack < x.item.maxStack && x.item.id == data.item.id)
                 .ToArray();
@@ -77,14 +92,39 @@ namespace ThirdPersonController.InventorySystem
                     }
                 }
             }
+        }
 
-            Destroy(itemInstance.gameObject);
-
-            // Insert this item into the first available (empty) slot.
-            collection.Insert(data);
-            itemAdded?.Invoke(data, collection);
-
-            return true;
+        /// <summary>
+        /// Moves the item to the next available collection, otherwise drops the item.
+        /// </summary>
+        /// <param name="itemData">The item data.</param>
+        public virtual void AutoMoveItem(ItemDataInstance itemData)
+        {
+            var collection = GetBestCollectionForItem(itemData);
+            var currentSlot = (uint)m_ItemCollections.FirstOrDefault(x => x.Contains(itemData)).GetSlot(itemData);
+            if (collection == null)
+            {
+                DropItem(itemData);
+            }
+            else
+            {
+                CombineWithExistingItems(itemData, collection);
+                if (itemData.stack > 0)
+                {
+                    if (collection.IsFullyOccupied())
+                    {
+                        DropItem(itemData);
+                    }
+                    else
+                    {
+                        MoveItem(itemData, collection, (uint)collection.GetFirstEmptySlot());
+                    }
+                }
+                else
+                {
+                    collection.SetSlot(null, currentSlot);
+                }
+            }
         }
 
         /// <summary>
@@ -98,8 +138,11 @@ namespace ThirdPersonController.InventorySystem
             var fromCollection = itemCollections.FirstOrDefault(x => x.Contains(itemData));
             fromCollection.SetSlot(null, (uint)fromCollection.GetSlot(itemData));
 
-            var objInstance = Instantiate(itemData.item.dropObject, transform.TransformDirection(m_DropOffset), transform.rotation);
+            var objInstance = Instantiate(itemData.item.dropObject, transform.position + transform.TransformDirection(m_DropOffset), transform.rotation);
             itemDropped?.Invoke(objInstance);
+
+            var itemInstance = objInstance.GetComponent<IItemInstance>();
+            itemInstance?.SetStack(itemData.stack);
             
             return objInstance;
         }
@@ -134,8 +177,13 @@ namespace ThirdPersonController.InventorySystem
 
             var fromCollection = itemCollections.FirstOrDefault(x => x.Contains(itemData));
             var fromSlot = fromCollection.GetSlot(itemData);
-
             var existingItem = collection.items.ElementAt((int)slot);
+            
+            if (itemData == existingItem)
+            {
+                return;
+            }
+
             if (existingItem != null)
             {
                 if (collection.SlotAllows(existingItem, slot) && 
@@ -200,6 +248,7 @@ namespace ThirdPersonController.InventorySystem
         {
             return Array
                 .FindAll(m_ItemCollections, x => x.AllowItem(itemData))
+                .Where(x => !x.Contains(itemData))
                 .OrderBy(x => x.priority)
                 .FirstOrDefault();
         }

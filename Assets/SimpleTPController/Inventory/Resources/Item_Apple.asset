@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Item_Apple
   m_EditorClassIdentifier: 
   m_ID: 0f0d600f-c272-4722-98c6-0cd61667a643
+  m_DisplayName: Apple
   m_Icon: {fileID: 0}
   m_MaxStack: 2
   m_DropObject: {fileID: 172020380692499405, guid: 64fad172d3ef4404ea38887b8e2cc62a,

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93142ab7d9301784baa61d9477ba49b8, type: 3}
-  m_Name: Item_Helment
+  m_Name: Item_Boots
   m_EditorClassIdentifier: 
-  m_ID: a50371c3-645f-4888-862d-c7ae9b82d2db
-  m_DisplayName: Helmet
+  m_ID: 05ea95af-bf39-4641-9154-1bacf08aee72
+  m_DisplayName: Boots
   m_Icon: {fileID: 0}
   m_MaxStack: 1
-  m_DropObject: {fileID: 5310862367403081293, guid: dc49f6eb55f6b894dad4acbe6ee531ff,
+  m_DropObject: {fileID: 1195694840977082321, guid: e83d83a28a40ba540b1828b681901845,
     type: 3}
-  m_Category: {fileID: 11400000, guid: d891ba013b559044fa619b6ddf6b90fe, type: 2}
+  m_Category: {fileID: 11400000, guid: 735a89059ca4d4443a7c244a5309bba9, type: 2}
