@@ -10,6 +10,9 @@ namespace ThirdPersonController
 
         private CharacterMotor m_CharacterMotor;
 
+        private float m_XInput;
+        private float m_YInput;
+
         /// <summary>
         /// The current camera controller.
         /// </summary>
@@ -38,9 +41,16 @@ namespace ThirdPersonController
         /// </summary>
         protected virtual void Update()
         {
-            cameraController.Rotate(
-                InputManager.GetAxis(m_DefaultSettings.mouseXInput),
-                InputManager.GetAxis(m_DefaultSettings.mouseYInput));
+            m_XInput = InputManager.GetAxis(m_DefaultSettings.mouseXInput);
+            m_YInput = InputManager.GetAxis(m_DefaultSettings.mouseYInput);
+        }
+
+        /// <summary>
+        /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+        /// </summary>
+        protected virtual void FixedUpdate()
+        {
+            cameraController.Rotate(m_XInput, m_YInput);
             transform.eulerAngles = new Vector3(0, cameraController.yRotation, 0);
         }
 

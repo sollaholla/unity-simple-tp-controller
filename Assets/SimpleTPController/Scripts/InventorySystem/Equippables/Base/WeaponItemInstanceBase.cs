@@ -4,6 +4,9 @@ namespace ThirdPersonController.InventorySystem
 {
     public abstract class WeaponItemInstanceBase<TItemType> : EquippableItemInstanceBase<TItemType>, IWeaponItemInstance where TItemType : WeaponInventoryItem
     {
+        [SerializeField] private Transform m_IKTransform = null;
+        public Transform ikTransform => m_IKTransform;
+
         /// <summary>
         /// The weapon item metadata.
         /// </summary>
@@ -34,7 +37,12 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// Called when this weapon is used in a secondary context (e.g. aiming, blocking)
         /// </summary>
-        public void SecondaryUse()
+        public void SecondaryUse(Vector3 usePoint, bool use)
+        {
+            OnSecondaryUse(usePoint, use);
+        }
+
+        protected virtual void OnSecondaryUse(Vector3 usePoint, bool use)
         {
         }
     }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8383503431775342025}
   - component: {fileID: 3978059319628833959}
   - component: {fileID: 6123225202627632434}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ItemPrefab_Boots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 6045860836519645976}
   - component: {fileID: 1682515999134292881}
   - component: {fileID: 7165729316343430269}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 6521951928565042024}
   - component: {fileID: 1514863981752381236}
   - component: {fileID: 2642097345634423359}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 380b011910a79a243b9a1b8c3f9d9113, type: 3}
+  m_Name: Item_AssaultRifle
+  m_EditorClassIdentifier: 
+  m_ID: 7827d78a-53af-4a9d-91a8-809193978d17
+  m_DisplayName: 
+  m_Icon: {fileID: 0}
+  m_MaxStack: 1
+  m_DropObject: {fileID: 7886049660709877336, guid: 4f1ae262f4fd37b4ab68e7538dffffc7,
+    type: 3}
+  m_Category: {fileID: 11400000, guid: 6dfaf90b85fc1794786d963f1b8d0c54, type: 2}
+  m_IKHand: 0
+  m_PrimaryAnimationType: 2
+  m_SecondaryAnimationType: 1
+  m_AttackAnimationParam: Shoot
+  m_PrimaryCooldown: 0.75
+  m_MovementCooldown: 0
+  m_WeaponKind: 0
+  m_WeaponOccupation: 1
+  m_CanUseAirally: 1
+  m_ProjectilePrefab: {fileID: 0}

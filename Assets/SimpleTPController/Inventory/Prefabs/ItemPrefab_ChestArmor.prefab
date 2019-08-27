@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7223349223268641408}
   - component: {fileID: 5575068061938292173}
   - component: {fileID: 7236808860807928243}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 5675857264394061618}
   - component: {fileID: 2099640712499751722}
   - component: {fileID: 3961497189050063648}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ItemPrefab_ChestArmor
   m_TagString: Untagged
   m_Icon: {fileID: 0}

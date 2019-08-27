@@ -25,7 +25,17 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// Called when a weapon is used.
         /// </summary>
-        public event Action<IWeaponItemInstance> weaponUsed;
+        public event Action<IWeaponItemInstance> primaryUsed;
+
+        /// <summary>
+        /// True if the <see cref="secondaryWeapon" /> is being secondarily used.
+        /// </summary>
+        public bool usingSecondary { get; private set; }
+
+        /// <summary>
+        /// The active secondary use point that's assigned during <see cref="UseSecondary" />.
+        /// </summary>
+        public Vector3 secondaryUseDirection { get; private set; }
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -41,7 +51,7 @@ namespace ThirdPersonController.InventorySystem
         }
 
         /// <summary>
-        /// Use this weapon in a primary context.
+        /// Use the <see cref="primaryWeapon" /> in a primary context.
         /// </summary>
         /// <param name="useRay">The directional information for the use action.</param>
         public virtual void PrimaryUse(Ray useRay)
@@ -56,24 +66,42 @@ namespace ThirdPersonController.InventorySystem
                 return;
             }
 
+            if (usingSecondary && secondaryWeapon != primaryWeapon)
+            {
+                return;
+            }
+
             if (primaryWeapon.PrimaryUse(useRay))
             {
-                weaponUsed?.Invoke(primaryWeapon);
+                primaryUsed?.Invoke(primaryWeapon);
                 m_CharacterMotor.MoveLock(primaryWeapon.weaponData.movementCooldown);
             }
         }
 
         /// <summary>
-        /// Use this weapon in a secondary context.
+        /// Use the <see cref="secondaryWeapon" /> in a secondary context.
         /// </summary>
-        public virtual void SecondaryUse()
+        public virtual void SecondaryUse(Vector3 useDirection, bool use)
         {
             if (secondaryWeapon == null)
             {
+                usingSecondary = false;
                 return;
             }
 
-            secondaryWeapon.SecondaryUse();
+            if (!m_CharacterMotor.isGrounded && !secondaryWeapon.weaponData.canUseAirially)
+            {
+                use = false;
+            }
+
+            if (m_CharacterMotor.isMovementLocked)
+            {
+                use = false;
+            }
+            
+            secondaryUseDirection = useDirection;
+            secondaryWeapon.SecondaryUse(useDirection, use);
+            usingSecondary = use;
         }
 
         protected virtual void OnEquippedItem(IEquippableItemInstance item)
@@ -90,6 +118,10 @@ namespace ThirdPersonController.InventorySystem
             {
                 case WeaponKind.Primary:
                     SetPrimaryWeapon(weaponItem);
+                    if (weaponItem.weaponData.occupation == WeaponOccupation.TwoHanded)
+                    {
+                        SetSecondaryWeapon(weaponItem);
+                    }
                     break;
                 case WeaponKind.Secondary:
                     SetSecondaryWeapon(weaponItem);
@@ -171,6 +203,11 @@ namespace ThirdPersonController.InventorySystem
         public virtual void SetSecondaryWeapon(IWeaponItemInstance secondaryWeapon)
         {
             this.secondaryWeapon = secondaryWeapon;
+
+            if (secondaryWeapon == null)
+            {
+                usingSecondary = false;
+            }
         }
     }
 }

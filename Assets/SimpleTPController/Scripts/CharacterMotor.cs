@@ -79,7 +79,7 @@ namespace ThirdPersonController
                 m_Motion = new Vector3(x, 0, z).normalized * GetDesiredMovementSpeed();
                 m_Motion += Physics.gravity * m_PhysicsSettings.groundStickForceMultiplier;
 
-                if (jump) 
+                if (jump && !isMovementLocked) 
                 {
                     isJumping = true;
                     m_Motion.y = 0;

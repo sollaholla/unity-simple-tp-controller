@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5729315267002329779}
   - component: {fileID: 3905677736900274465}
   - component: {fileID: 1070017157295688402}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ItemPrefab_Apple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 3877956506881142126}
   - component: {fileID: 857600512471716019}
   - component: {fileID: 7951175617773960032}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

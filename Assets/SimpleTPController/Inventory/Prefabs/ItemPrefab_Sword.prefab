@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4270637762490832139}
   - component: {fileID: 3852612134985327137}
   - component: {fileID: 4226191938043622335}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,6 +91,50 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &2409149900561935552
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 931599850108876293}
+  - component: {fileID: 7433808710179731886}
+  m_Layer: 8
+  m_Name: BoundingBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &931599850108876293
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2409149900561935552}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.577, z: 0}
+  m_LocalScale: {x: 0.1875, y: 0.9608953, z: 0.1875}
+  m_Children: []
+  m_Father: {fileID: 9029143759483823713}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7433808710179731886
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2409149900561935552}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3394781974957745680
 GameObject:
   m_ObjectHideFlags: 0
@@ -103,7 +147,7 @@ GameObject:
   - component: {fileID: 470296471967056640}
   - component: {fileID: 4495258336957111323}
   - component: {fileID: 5469270621914740120}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,7 +237,7 @@ GameObject:
   - component: {fileID: 9029143759483823713}
   - component: {fileID: -2569565246780770495}
   - component: {fileID: 4493133422489165125}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ItemPrefab_Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -214,6 +258,7 @@ Transform:
   - {fileID: 3162352262989156972}
   - {fileID: 2140541534120435675}
   - {fileID: 4789379530547601652}
+  - {fileID: 931599850108876293}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -230,6 +275,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Item: {fileID: 11400000, guid: 59a4d5bc150ec0448a0d60c92e28bfd8, type: 2}
+  m_IKTransform: {fileID: 0}
+  m_BoundingBox: {fileID: 7433808710179731886}
 --- !u!54 &4493133422489165125
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -258,7 +305,7 @@ GameObject:
   - component: {fileID: 6611246546888134966}
   - component: {fileID: 7016876232982532595}
   - component: {fileID: 7365960738637760915}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

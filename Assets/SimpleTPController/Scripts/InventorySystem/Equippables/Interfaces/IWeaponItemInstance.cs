@@ -8,6 +8,11 @@ namespace ThirdPersonController.InventorySystem
     public interface IWeaponItemInstance : IEquippableItemInstance
     {
         /// <summary>
+        /// The hand IK transform.
+        /// </summary>
+        Transform ikTransform { get; }
+
+        /// <summary>
         /// The weapon item metadata.
         /// </summary>
         /// <value></value>
@@ -22,6 +27,6 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// Use this weapon in a secondary context.
         /// </summary>
-        void SecondaryUse();
+        void SecondaryUse(Vector3 direction, bool use);
     }
 }

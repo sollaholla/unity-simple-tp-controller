@@ -14,6 +14,9 @@ namespace ThirdPersonController.InventorySystem
         private WeaponHandler m_WeaponHandler;
         private ICameraControllerInput m_CameraControllerInput;
 
+        private bool m_PrimaryInput;
+        private bool m_SecondaryInput;
+
         /// <summary>
         /// Awake is called when the script instance is being loaded.
         /// </summary>
@@ -28,11 +31,16 @@ namespace ThirdPersonController.InventorySystem
         /// </summary>
         protected virtual void Update()
         {
-            if (InputManager.GetButton(m_InputSettings.primaryUseButton))
+            m_PrimaryInput = InputManager.GetButton(m_InputSettings.primaryUseButton);
+            m_SecondaryInput = InputManager.GetButton(m_InputSettings.secondaryUseButton);
+
+            var cam = m_CameraControllerInput.cameraController.cam;            
+            if (m_PrimaryInput)
             {
-                var useRay = m_CameraControllerInput.cameraController.cam.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-                m_WeaponHandler.PrimaryUse(useRay);
+                m_WeaponHandler.PrimaryUse(new Ray(cam.transform.position, cam.transform.forward));
             }
+
+            m_WeaponHandler.SecondaryUse(cam.transform.forward, m_SecondaryInput || m_InputSettings.debugAim);
         }
     }
 }

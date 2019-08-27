@@ -20,10 +20,12 @@ MonoBehaviour:
     type: 3}
   m_Category: {fileID: 11400000, guid: 6dfaf90b85fc1794786d963f1b8d0c54, type: 2}
   m_IKHand: 0
-  m_AnimationID: 1
+  m_PrimaryAnimationType: 1
+  m_SecondaryAnimationType: 0
   m_AttackAnimationParam: Attack
-  m_PrimaryCooldown: 0.75
-  m_MovementCooldown: 0.5
+  m_PrimaryCooldown: 0.6
+  m_MovementCooldown: 0.9
   m_WeaponKind: 0
   m_WeaponOccupation: 0
   m_CanUseAirally: 0
+  m_DamageCooldown: 0.5

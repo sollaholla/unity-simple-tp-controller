@@ -11,6 +11,8 @@ namespace ThirdPersonController.InventorySystem
 
         private Animator m_Animator;
         private WeaponHandler m_WeaponHandler;
+        private Vector3 m_SmoothLookat;
+        private float m_AimWeight;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -19,7 +21,7 @@ namespace ThirdPersonController.InventorySystem
         {
             m_Animator = GetComponent<Animator>();
             m_WeaponHandler = GetComponent<WeaponHandler>();
-            m_WeaponHandler.weaponUsed += OnWeaponUsed;
+            m_WeaponHandler.primaryUsed += OnWeaponUsed;
         }
 
         protected virtual void OnWeaponUsed(IWeaponItemInstance weaponItem)
@@ -32,21 +34,81 @@ namespace ThirdPersonController.InventorySystem
         /// </summary>
         protected virtual void Update()
         {
-            if (m_WeaponHandler.primaryWeapon != null)
+            AnimateForWeapon(m_WeaponHandler.primaryWeapon, true, m_AnimatorSettings.primaryWeaponTypeParam);
+            AnimateForWeapon(m_WeaponHandler.secondaryWeapon, true, m_AnimatorSettings.secondaryWeaponTypeParam);
+
+            if (m_WeaponHandler.secondaryWeapon != null && m_WeaponHandler.usingSecondary)
+            {
+                m_Animator.SetBool(m_AnimatorSettings.secondaryUseAnimationParam, true);
+            }
+            else
+            {
+                m_Animator.SetBool(m_AnimatorSettings.secondaryUseAnimationParam, false);
+            }
+        }
+
+        protected virtual void AnimateForWeapon(IWeaponItemInstance item, bool use, string paramName)
+        {
+            if (item != null && use)
             {
                 m_Animator.SetFloat(
-                    m_AnimatorSettings.weaponIDParam, 
-                    m_WeaponHandler.primaryWeapon.weaponData.animationID, 
-                    m_AnimatorSettings.weaponIDDampTime, 
+                    paramName, 
+                    item.weaponData.primaryAnimationType, 
+                    m_AnimatorSettings.weaponTypeAnimDampTime, 
                     Time.deltaTime);
             }
             else
             {
                 m_Animator.SetFloat(
-                    m_AnimatorSettings.weaponIDParam,
+                    paramName,
                     0,
-                    m_AnimatorSettings.weaponIDDampTime,
+                    m_AnimatorSettings.weaponTypeAnimDampTime,
                     Time.deltaTime);
+            }
+        }
+
+        /// <summary>
+        /// LateUpdate is called every frame, if the Behaviour is enabled.
+        /// It is called after all Update functions have been called.
+        /// </summary>
+        protected virtual void LateUpdate()
+        {
+            if (m_WeaponHandler.usingSecondary)
+            {
+                m_AimWeight = Mathf.Lerp(m_AimWeight, 1f, Time.deltaTime * m_AnimatorSettings.aimSmoothRate);
+            }
+            else
+            {
+                m_AimWeight = Mathf.Lerp(m_AimWeight, 0f, Time.deltaTime * m_AnimatorSettings.aimSmoothRate);
+            }
+
+            var spineBone = m_Animator.GetBoneTransform(HumanBodyBones.Spine);
+            var rotation = Quaternion.LookRotation(m_WeaponHandler.secondaryUseDirection);
+            
+            spineBone.transform.rotation = Quaternion.Lerp(
+                spineBone.transform.rotation, 
+                rotation * m_AnimatorSettings.secondarySpineRotationOffset, 
+                m_AimWeight);
+        }
+
+        /// <summary>
+        /// Callback for setting up animation IK (inverse kinematics).
+        /// </summary>
+        /// <param name="layerIndex">Index of the layer on which the IK solver is called.</param>
+        protected virtual void OnAnimatorIK(int layerIndex)
+        {
+            var primaryWeapon = m_WeaponHandler.primaryWeapon;
+            switch(layerIndex)
+            {
+                case 0:
+                    if (primaryWeapon != null && primaryWeapon.ikTransform != null)
+                    {
+                        m_Animator.SetIKPosition(primaryWeapon.weaponData.ikGoal, primaryWeapon.ikTransform.position);
+                        m_Animator.SetIKRotation(primaryWeapon.weaponData.ikGoal, primaryWeapon.ikTransform.rotation);
+                        m_Animator.SetIKPositionWeight(primaryWeapon.weaponData.ikGoal, 1f);
+                        m_Animator.SetIKRotationWeight(primaryWeapon.weaponData.ikGoal, 1f);
+                    }
+                    break;
             }
         }
     }

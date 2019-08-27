@@ -16,5 +16,17 @@ namespace ThirdPersonController.InventorySystem
         {
             get { return m_SecondaryUseButton; }
         }
+
+        [SerializeField] private LayerMask m_AimLayers = Physics.DefaultRaycastLayers;
+        public LayerMask aimLayers
+        {
+            get { return m_AimLayers; }
+        }
+
+        [SerializeField] private bool m_DebugAim = false;
+        public bool debugAim
+        {
+            get { return m_DebugAim; }
+        }
     }
 }

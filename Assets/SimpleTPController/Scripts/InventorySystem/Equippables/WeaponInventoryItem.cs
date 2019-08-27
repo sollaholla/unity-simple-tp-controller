@@ -39,14 +39,20 @@ namespace ThirdPersonController.InventorySystem
             get { return m_IKHand == WeaponIKHand.Right ? AvatarIKGoal.RightHand : AvatarIKGoal.LeftHand; }
         }
 
-        [SerializeField] private int m_AnimationID = 0;
+        [SerializeField] private int m_PrimaryAnimationType = 0;
 
         /// <summary>
         /// The weapons animation ID. Used when this wepaon is weilded by a character.
         /// </summary>
-        public int animationID 
+        public int primaryAnimationType 
         {
-            get { return m_AnimationID; }
+            get { return m_PrimaryAnimationType; }
+        }
+
+        [SerializeField] private int m_SecondaryAnimationType = 0;
+        public int secondaryAnimationType
+        {
+            get { return m_SecondaryAnimationType; }
         }
 
         [SerializeField] private string m_AttackAnimationParam = "Attack";
