@@ -183,6 +183,7 @@ GameObject:
   - component: {fileID: 7879458344160741012}
   - component: {fileID: 4691456010463195466}
   - component: {fileID: 8280005537261072766}
+  - component: {fileID: 8140948342111521503}
   m_Layer: 2
   m_Name: Player
   m_TagString: Player
@@ -453,6 +454,7 @@ MonoBehaviour:
   m_AnimatorSettings:
     m_PrimaryWeaponTypeParam: PrimaryWeaponType
     m_SecondaryWeaponTypeParam: SecondaryWeaponType
+    m_BlockIKStateTag: BlockIK
     m_WeaponTypeAnimDampTime: 0.1
     m_SecondaryUseAnimationParam: Block/Aim
     m_AimSmoothRate: 10
@@ -528,6 +530,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_PickupInput: Pickup
+--- !u!114 &8140948342111521503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5986725704378417073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baa1274a81b3d304a950dabb702bd1ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MaxHealth: 100
 --- !u!1 &7402333725275358343
 GameObject:
   m_ObjectHideFlags: 0
