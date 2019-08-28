@@ -12,5 +12,6 @@ namespace ThirdPersonController
         void ManualUpdate();
         void Rotate(float xDelta, float yDelta);
         void SetTarget(Transform target);
+        void Zoom(float zoomLevel);
     }
 }

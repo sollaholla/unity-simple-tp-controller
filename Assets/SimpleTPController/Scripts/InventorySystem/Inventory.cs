@@ -70,6 +70,52 @@ namespace ThirdPersonController.InventorySystem
         }
 
         /// <summary>
+        /// Remove the given count of items with the given type from the given collection.
+        /// </summary>
+        /// <param name="itemType">The item type to remove.</param>
+        /// <param name="count">The count of items to remove.</param>
+        /// <param name="collection">The collection to remove the items from.</param>
+        public virtual int RemoveItems(InventoryItem itemType, uint count, ItemCollection collection)
+        {
+            var items = collection.items.Where(x => x != null && x.item == itemType).ToArray();
+            var removedCount = 0;
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                var itemData = items[i];
+                var stackToRemove = 0u;
+
+                for (int j = 0; j < itemData.stack; j++)
+                {
+                    if (count == 0)
+                    {
+                        break;
+                    }
+
+                    count--;
+                    stackToRemove++;
+                    removedCount++;
+                }
+
+                if (itemData.stack - stackToRemove == 0)
+                {
+                    collection.SetSlot(null, (uint)collection.GetSlot(itemData));
+                }
+                else
+                {
+                    itemData.SetStack(itemData.stack - stackToRemove);
+                }
+
+                if (count == 0)
+                {
+                    break;
+                }
+            }
+
+            return removedCount;
+        }
+
+        /// <summary>
         /// Distributes the item data among existing items within the target collection.
         /// </summary>
         /// <param name="data">The item data instance.</param>

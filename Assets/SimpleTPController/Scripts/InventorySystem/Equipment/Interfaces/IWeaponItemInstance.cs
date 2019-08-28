@@ -21,8 +21,7 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// Use this weapon in a primary context.
         /// </summary>
-        /// <param name="useRay">The use direction data.</param>
-        bool PrimaryUse(Ray useRay);
+        bool PrimaryUse(Vector3 point);
 
         /// <summary>
         /// Use this weapon in a secondary context.

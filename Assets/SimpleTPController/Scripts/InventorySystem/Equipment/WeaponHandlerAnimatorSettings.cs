@@ -17,6 +17,12 @@ namespace ThirdPersonController.InventorySystem
             get { return m_SecondaryWeaponTypeParam; }
         }
 
+        [SerializeField] private string m_BlockIKStateTag = "BlockIK";
+        public string blockIKStateTag
+        {
+            get { return m_BlockIKStateTag; }
+        }
+
         [Range(0, 1)]
         [SerializeField] private float m_WeaponTypeAnimDampTime = 0.1f;
         public float weaponTypeAnimDampTime

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4c2a61cb20ac1384ca31933d0d5b6645
+guid: a4304670c8b573d4abf44cc3d02786ac
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable:
@@ -35,19 +35,19 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: idle_crouching
+      name: reloading
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 63
+      lastFrame: 198
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 1
+      loopTime: 0
+      loopBlend: 0
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 1

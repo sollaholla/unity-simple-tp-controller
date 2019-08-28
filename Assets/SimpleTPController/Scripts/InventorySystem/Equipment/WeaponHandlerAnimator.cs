@@ -29,13 +29,27 @@ namespace ThirdPersonController.InventorySystem
             m_Animator.SetTrigger(weaponItem.weaponData.attackAnimationParam);
         }
 
+        protected virtual bool BlockIK()
+        {
+            for (int i = 0; i < m_Animator.layerCount; i++)
+            {
+                var layer = m_Animator.GetCurrentAnimatorStateInfo(i);
+                if (layer.IsTag(m_AnimatorSettings.blockIKStateTag))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Update is called every frame, if the MonoBehaviour is enabled.
         /// </summary>
         protected virtual void Update()
         {
-            AnimateForWeapon(m_WeaponHandler.primaryWeapon, true, m_AnimatorSettings.primaryWeaponTypeParam);
-            AnimateForWeapon(m_WeaponHandler.secondaryWeapon, true, m_AnimatorSettings.secondaryWeaponTypeParam);
+            AnimateForWeapon(m_WeaponHandler.primaryWeapon, m_AnimatorSettings.primaryWeaponTypeParam);
+            AnimateForWeapon(m_WeaponHandler.secondaryWeapon, m_AnimatorSettings.secondaryWeaponTypeParam);
 
             if (m_WeaponHandler.secondaryWeapon != null && m_WeaponHandler.usingSecondary)
             {
@@ -47,9 +61,9 @@ namespace ThirdPersonController.InventorySystem
             }
         }
 
-        protected virtual void AnimateForWeapon(IWeaponItemInstance item, bool use, string paramName)
+        protected virtual void AnimateForWeapon(IWeaponItemInstance item, string paramName)
         {
-            if (item != null && use)
+            if (item != null)
             {
                 m_Animator.SetFloat(
                     paramName, 
@@ -73,7 +87,17 @@ namespace ThirdPersonController.InventorySystem
         /// </summary>
         protected virtual void LateUpdate()
         {
-            if (m_WeaponHandler.usingSecondary)
+            UpdateSecondarySpineIK();
+        }
+
+        private void UpdateSecondarySpineIK()
+        {
+            if (m_WeaponHandler.secondaryWeapon == null)
+            {
+                return;
+            }
+
+            if (m_WeaponHandler.usingSecondary && !BlockIK())
             {
                 m_AimWeight = Mathf.Lerp(m_AimWeight, 1f, Time.deltaTime * m_AnimatorSettings.aimSmoothRate);
             }
@@ -84,10 +108,10 @@ namespace ThirdPersonController.InventorySystem
 
             var spineBone = m_Animator.GetBoneTransform(HumanBodyBones.Spine);
             var rotation = Quaternion.LookRotation(m_WeaponHandler.secondaryUseDirection);
-            
+
             spineBone.transform.rotation = Quaternion.Lerp(
-                spineBone.transform.rotation, 
-                rotation * m_AnimatorSettings.secondarySpineRotationOffset, 
+                spineBone.transform.rotation,
+                rotation * m_AnimatorSettings.secondarySpineRotationOffset,
                 m_AimWeight);
         }
 
@@ -101,7 +125,7 @@ namespace ThirdPersonController.InventorySystem
             switch(layerIndex)
             {
                 case 0:
-                    if (primaryWeapon != null && primaryWeapon.ikTransform != null)
+                    if (primaryWeapon != null && primaryWeapon.ikTransform != null && !BlockIK())
                     {
                         m_Animator.SetIKPosition(primaryWeapon.weaponData.ikGoal, primaryWeapon.ikTransform.position);
                         m_Animator.SetIKRotation(primaryWeapon.weaponData.ikGoal, primaryWeapon.ikTransform.rotation);

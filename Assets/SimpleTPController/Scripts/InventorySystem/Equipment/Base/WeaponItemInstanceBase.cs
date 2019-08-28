@@ -2,9 +2,17 @@
 
 namespace ThirdPersonController.InventorySystem
 {
+    /// <summary>
+    /// A base weapon item instance type.
+    /// </summary>
+    /// <typeparam name="TItemType">The type of weapon item.</typeparam>
     public abstract class WeaponItemInstanceBase<TItemType> : EquippableItemInstanceBase<TItemType>, IWeaponItemInstance where TItemType : WeaponInventoryItem
     {
         [SerializeField] private Transform m_IKTransform = null;
+
+        /// <summary>
+        /// The hand IK transform.
+        /// </summary>
         public Transform ikTransform => m_IKTransform;
 
         /// <summary>
@@ -17,8 +25,7 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// Called when this weapon is used in a primary context (e.g. shooting, swinging sword).
         /// </summary>
-        /// <param name="useRay">The directional information of the use action.</param>
-        public bool PrimaryUse(Ray useRay)
+        public bool PrimaryUse(Vector3 point)
         {
             if (Time.time < m_CurrentCooldown)
             {
@@ -26,10 +33,10 @@ namespace ThirdPersonController.InventorySystem
             }
 
             m_CurrentCooldown = Time.time + item.primaryCooldown;
-            return OnPrimaryUse(useRay);
+            return OnPrimaryUse(point);
         }
 
-        protected virtual bool OnPrimaryUse(Ray useRay)
+        protected virtual bool OnPrimaryUse(Vector3 point)
         {
             return true;
         }
@@ -37,12 +44,12 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// Called when this weapon is used in a secondary context (e.g. aiming, blocking)
         /// </summary>
-        public void SecondaryUse(Vector3 usePoint, bool use)
+        public void SecondaryUse(Vector3 direction, bool use)
         {
-            OnSecondaryUse(usePoint, use);
+            OnSecondaryUse(direction, use);
         }
 
-        protected virtual void OnSecondaryUse(Vector3 usePoint, bool use)
+        protected virtual void OnSecondaryUse(Vector3 direction, bool use)
         {
         }
     }

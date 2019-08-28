@@ -40,7 +40,7 @@ namespace ThirdPersonController.InventorySystem
             }
         }
 
-        protected override bool OnPrimaryUse(Ray useRay)
+        protected override bool OnPrimaryUse(Vector3 point)
         {
             m_BoundingBox.enabled = true;
             m_DamageTimer = Time.fixedTime + item.damageCooldown;

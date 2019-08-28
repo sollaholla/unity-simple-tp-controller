@@ -23,9 +23,12 @@ MonoBehaviour:
   m_PrimaryAnimationType: 2
   m_SecondaryAnimationType: 1
   m_AttackAnimationParam: Shoot
-  m_PrimaryCooldown: 0.75
+  m_PrimaryCooldown: 0.1
   m_MovementCooldown: 0
   m_WeaponKind: 0
   m_WeaponOccupation: 1
   m_CanUseAirally: 1
-  m_ProjectilePrefab: {fileID: 0}
+  m_MaxAmmo: 15
+  m_AmmoItemType: {fileID: 11400000, guid: 21bde286226472a49ab3ef2b1aff3377, type: 2}
+  m_ZoomLevel: 30
+  m_ZoomSpeed: 10

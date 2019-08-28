@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace ThirdPersonController.InventorySystem
@@ -11,6 +12,7 @@ namespace ThirdPersonController.InventorySystem
         private EquipmentHandler m_EquipmentHandler;
         private Inventory m_Inventory;
         private CharacterMotor m_CharacterMotor;
+        private IWeaponHandlerBehaviourOverride[] m_BehaviourOverrides;
 
         /// <summary>
         /// The currently equipped (primary) weapon.
@@ -23,17 +25,32 @@ namespace ThirdPersonController.InventorySystem
         public IWeaponItemInstance secondaryWeapon { get; private set; }
 
         /// <summary>
-        /// Called when a weapon is used.
+        /// True if the secondary weapon is the primary weapon and the weapons are equipped.
+        /// </summary>
+        public bool isTwoHanded => secondaryWeapon != null && secondaryWeapon == primaryWeapon;
+
+        /// <summary>
+        /// Invoked when the primary weapon is used.
         /// </summary>
         public event Action<IWeaponItemInstance> primaryUsed;
 
         /// <summary>
-        /// True if the <see cref="secondaryWeapon" /> is being secondarily used.
+        /// Invoked when the primary weapon has changed.
+        /// </summary>
+        public event Action<IWeaponItemInstance> primaryWeaponChanged;
+
+        /// <summary>
+        /// Invoked when the secondary weapon has changed.
+        /// </summary>
+        public event Action<IWeaponItemInstance> secondaryWeaponChanged;
+
+        /// <summary>
+        /// True if the <see cref="secondaryWeapon" /> is being used.
         /// </summary>
         public bool usingSecondary { get; private set; }
 
         /// <summary>
-        /// The active secondary use point that's assigned during <see cref="UseSecondary" />.
+        /// The direction in which the <see cref="secondaryWeapon" /> was used.
         /// </summary>
         public Vector3 secondaryUseDirection { get; private set; }
 
@@ -48,13 +65,13 @@ namespace ThirdPersonController.InventorySystem
             
             m_Inventory = GetComponent<Inventory>();
             m_CharacterMotor = GetComponent<CharacterMotor>();
+            m_BehaviourOverrides = GetComponents<IWeaponHandlerBehaviourOverride>();
         }
 
         /// <summary>
-        /// Use the <see cref="primaryWeapon" /> in a primary context.
+        /// Use the <see cref="primaryWeapon" />.
         /// </summary>
-        /// <param name="useRay">The directional information for the use action.</param>
-        public virtual void PrimaryUse(Ray useRay)
+        public virtual void PrimaryUse(Vector3 point)
         {
             if (primaryWeapon == null)
             {
@@ -71,16 +88,23 @@ namespace ThirdPersonController.InventorySystem
                 return;
             }
 
-            if (primaryWeapon.PrimaryUse(useRay))
+            if (!m_BehaviourOverrides.Any(x => x.CanUsePrimary(point, primaryWeapon)))
             {
-                primaryUsed?.Invoke(primaryWeapon);
+                return;
+            }
+
+            if (primaryWeapon.PrimaryUse(point))
+            {
                 m_CharacterMotor.MoveLock(primaryWeapon.weaponData.movementCooldown);
+                primaryUsed?.Invoke(primaryWeapon);
             }
         }
 
         /// <summary>
-        /// Use the <see cref="secondaryWeapon" /> in a secondary context.
+        /// Use the <see cref="secondaryWeapon" />.
         /// </summary>
+        /// <param name="useDirection">The direction that the weapon was used (e.g. aim direction).</param>
+        /// <param name="use">Set to true to use this item now.</param>
         public virtual void SecondaryUse(Vector3 useDirection, bool use)
         {
             if (secondaryWeapon == null)
@@ -99,6 +123,11 @@ namespace ThirdPersonController.InventorySystem
                 use = false;
             }
             
+            if (!m_BehaviourOverrides.Any(x => x.CanUseSecondary(useDirection, use, secondaryWeapon)))
+            {
+                use = false;
+            }
+
             secondaryUseDirection = useDirection;
             secondaryWeapon.SecondaryUse(useDirection, use);
             usingSecondary = use;
@@ -187,22 +216,30 @@ namespace ThirdPersonController.InventorySystem
             
             if (weaponItem == primaryWeapon)
             {
-                primaryWeapon = null;
+                SetPrimaryWeapon(null);
             }
             if (weaponItem == secondaryWeapon)
             {
-                secondaryWeapon = null;
+                SetSecondaryWeapon(null);
             }
         }
 
         public virtual void SetPrimaryWeapon(IWeaponItemInstance primaryWeapon)
         {
-            this.primaryWeapon = primaryWeapon;
+            if (this.primaryWeapon != primaryWeapon)
+            {
+                this.primaryWeapon = primaryWeapon;
+                primaryWeaponChanged?.Invoke(primaryWeapon);
+            }
         }
 
         public virtual void SetSecondaryWeapon(IWeaponItemInstance secondaryWeapon)
         {
-            this.secondaryWeapon = secondaryWeapon;
+            if (this.secondaryWeapon != secondaryWeapon)
+            {
+                this.secondaryWeapon = secondaryWeapon;
+                secondaryWeaponChanged?.Invoke(secondaryWeapon);
+            }
 
             if (secondaryWeapon == null)
             {
