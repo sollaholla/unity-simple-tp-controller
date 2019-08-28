@@ -44,6 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a02dc5ad36261045b09b12c52e310a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_WallCheckLayers:
+    serializedVersion: 2
+    m_Bits: 4294967291
   m_Target: {fileID: 0}
   m_Camera: {fileID: 7419157360608286504}
   m_Pivot: {fileID: 7419157360777023527}
@@ -130,7 +133,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.1
   far clip plane: 1000
   field of view: 90
   orthographic: 0

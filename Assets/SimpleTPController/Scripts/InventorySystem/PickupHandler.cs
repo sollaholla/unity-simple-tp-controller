@@ -13,8 +13,8 @@ namespace ThirdPersonController.InventorySystem
         [SerializeField] private PickupHandlerPhysicsSettings m_PhysicsSettings = null;
 
         private Collider[] m_Colliders = new Collider[10];
-        private InventoryItemInstance[] m_NearbyItems = new InventoryItemInstance[10];
-        private InventoryItemInstance m_NearestItem;
+        private IItemInstance[] m_NearbyItems = new IItemInstance[10];
+        private IItemInstance m_NearestItem;
         private Inventory m_Inventory;
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace ThirdPersonController.InventorySystem
         /// Pickups the given inventory item instance.
         /// </summary>
         /// <param name="item">The item to pickup.</param>
-        public virtual void Pickup(InventoryItemInstance item)
+        public virtual void Pickup(IItemInstance item)
         {
             if (item == null)
             {
@@ -56,7 +56,7 @@ namespace ThirdPersonController.InventorySystem
             m_Inventory.Add(item);
         }
 
-        protected virtual InventoryItemInstance HoverPickups(int count, InventoryItemInstance[] items)
+        protected virtual IItemInstance HoverPickups(int count, IItemInstance[] items)
         {
             if (count == 0)
             {
@@ -64,7 +64,7 @@ namespace ThirdPersonController.InventorySystem
             }
 
             var nearestDistance = Mathf.Infinity;
-            InventoryItemInstance nearest = null;
+            IItemInstance nearest = null;
             for (int i = 0; i < count; i++)
             {
                 var item = items[i];
@@ -81,7 +81,7 @@ namespace ThirdPersonController.InventorySystem
             return nearest;
         }
 
-        protected virtual int GetNearbyPickups(InventoryItemInstance[] items)
+        protected virtual int GetNearbyPickups(IItemInstance[] items)
         {
             var count = Physics.OverlapSphereNonAlloc(
                 transform.position, 
@@ -94,8 +94,8 @@ namespace ThirdPersonController.InventorySystem
             {
                 var collider = m_Colliders[i];
                 var pickup = 
-                    collider.GetComponent<InventoryItemInstance>() ?? 
-                    collider.attachedRigidbody?.GetComponent<InventoryItemInstance>();
+                    collider.GetComponent<IItemInstance>() ?? 
+                    collider.attachedRigidbody?.GetComponent<IItemInstance>();
                 if (pickup != null)
                 {
                     items[pickupCount] = pickup;

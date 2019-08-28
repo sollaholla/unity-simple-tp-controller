@@ -18,7 +18,7 @@ namespace ThirdPersonController.InventorySystem
         private void Start()
         {
             var objInstance = Instantiate(m_Prefab, transform.position, transform.rotation);
-            var itemInstance = objInstance.GetComponent<InventoryItemInstance>();
+            var itemInstance = objInstance.GetComponent<IItemInstance>();
             itemInstance.SetStack(m_StartingStack);
         }
     }

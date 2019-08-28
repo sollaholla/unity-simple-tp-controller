@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93142ab7d9301784baa61d9477ba49b8, type: 3}
+  m_Name: Item_ChestArmor
+  m_EditorClassIdentifier: 
+  m_ID: db20c5d5-5869-42f0-92d3-34827d24fe8e
+  m_DisplayName: Chest Armor
+  m_Icon: {fileID: 0}
+  m_MaxStack: 1
+  m_DropObject: {fileID: 8730657889274727640, guid: 94423158188c7ce4a8f99d3425224621,
+    type: 3}
+  m_Category: {fileID: 11400000, guid: 32bd07074af53fb499e35f83848500bb, type: 2}

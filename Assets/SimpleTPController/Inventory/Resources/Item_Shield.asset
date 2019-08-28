@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a268bccb1e9f8d8458e18c135a21984c, type: 3}
+  m_Name: Item_Shield
+  m_EditorClassIdentifier: 
+  m_ID: ca0a7b47-efc5-4779-b245-ecbe5005c1c0
+  m_DisplayName: Shield
+  m_Icon: {fileID: 0}
+  m_MaxStack: 1
+  m_DropObject: {fileID: 4266653893829770627, guid: f751b226facaddd4b8bd75640d1b68e2,
+    type: 3}
+  m_Category: {fileID: 11400000, guid: 91b1474ca03962a418f1ac075142e784, type: 2}
+  m_IKHand: 0
+  m_AnimationID: 0
+  m_AttackAnimationParam: Attack
+  m_PrimaryCooldown: 0
+  m_MovementCooldown: 0
+  m_WeaponKind: 1
+  m_WeaponOccupation: 0
+  m_CanUseAirally: 1

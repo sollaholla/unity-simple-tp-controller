@@ -25,7 +25,7 @@ namespace ThirdPersonController.InventorySystem
         /// </summary>
         protected virtual void Update()
         {
-            if (Input.GetButtonDown(m_PickupInput))
+            if (InputManager.GetButtonDown(m_PickupInput))
             {
                 m_PickupHandler.PickupNearestItem();
             }

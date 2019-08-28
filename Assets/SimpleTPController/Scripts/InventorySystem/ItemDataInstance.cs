@@ -6,16 +6,17 @@ namespace ThirdPersonController.InventorySystem
     /// <summary>
     /// An item data instance.
     /// </summary>
+    [System.Serializable]
     public class ItemDataInstance
     {
         /// <summary>
         /// Create a new instance of <see cref="ItemDataInstance" />
         /// </summary>
         /// <param name="instance">The item monobehaviour/visual instance.</param>
-        public ItemDataInstance(InventoryItemInstance instance)
+        public ItemDataInstance(InventoryItem item, uint stack)
         {
-            this.item = instance.item;
-            this.stack = instance.stack;
+            this.item = item;
+            this.stack = stack;
         }
 
         /// <summary>

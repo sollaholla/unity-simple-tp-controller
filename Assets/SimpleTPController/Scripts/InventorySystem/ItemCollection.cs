@@ -16,6 +16,7 @@ namespace ThirdPersonController.InventorySystem
         [SerializeField] private int m_MaxItems = 10;
         [Tooltip("If no categories are defined, we will allow any item into this collection.")]
         [SerializeField] private ItemCategory[] m_Categories = null;
+        [SerializeField] private ItemSlotMask[] m_SlotMasks = null;
 
         private ItemDataInstance[] m_Items;
 
@@ -82,11 +83,6 @@ namespace ThirdPersonController.InventorySystem
         /// <param name="itemData">The item data.</param>
         public virtual bool AllowItem(ItemDataInstance itemData)
         {
-            if (IsFull())
-            {
-                return false;
-            }
-            
             if (!AllowsCategory(itemData.item.category))
             {
                 return false;
@@ -105,11 +101,36 @@ namespace ThirdPersonController.InventorySystem
         }
 
         /// <summary>
+        /// True if the given item is allowed in the given slot.
+        /// </summary>
+        /// <param name="itemData">The item data.</param>
+        /// <param name="slot">The item slot.</param>
+        /// <returns></returns>
+        public bool SlotAllows(ItemDataInstance itemData, uint slot)
+        {
+            var slotMask = m_SlotMasks.FirstOrDefault(x => x.slot == slot);
+            if (slotMask != null)
+            {
+                if (!slotMask.itemCategories.Contains(itemData.item.category))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// True if this item collection is full.
         /// </summary>
         public virtual bool IsFull()
         {
             return items.All(x => x != null && x.stack == x.item.maxStack);
+        }
+
+        public virtual bool IsFullyOccupied()
+        {
+            return items.All(x => x != null);
         }
 
         /// <summary>
@@ -127,15 +148,22 @@ namespace ThirdPersonController.InventorySystem
         /// Insert the given item data into the inventory items in the first empty slot.
         /// </summary>
         /// <param name="itemData">The item data.</param>
-        public virtual void Insert(ItemDataInstance itemData)
+        public virtual bool Insert(ItemDataInstance itemData)
         {
-            if (IsFull())
+            if (itemData.stack <= 0)
             {
-                return;
+                return false;
+            }
+
+            if (IsFullyOccupied())
+            {
+                return false;
             }
 
             int index = GetFirstEmptySlot();
             SetSlot(itemData, (uint)index);
+
+            return true;
         }
 
         /// <summary>

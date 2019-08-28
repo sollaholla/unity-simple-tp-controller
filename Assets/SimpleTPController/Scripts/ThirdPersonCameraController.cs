@@ -18,7 +18,7 @@ namespace ThirdPersonController
     /// <summary>
     /// A third person camera rig.
     /// </summary>
-    public class ThirdPersonCameraController : MonoBehaviour
+    public class ThirdPersonCameraController : CameraWallCheckHandler, ICameraController
     {
         [Header("Setup")]
         [SerializeField] private Transform m_Target = null;
@@ -49,8 +49,27 @@ namespace ThirdPersonController
         /// </summary>
         public CameraState currentState { get; private set; }
 
+        /// <summary>
+        /// The camera being used for the camera rig.
+        /// </summary>
+        public Camera cam => m_Camera;
+
+        /// <summary>
+        /// The desired z offset of the camera.
+        /// </summary>
+        public override Vector3 desiredCameraOffset => currentState.cameraOffset;
+
+        /// <summary>
+        /// The rigs camera pivot.
+        /// </summary>
+        public override Transform pivot => m_Pivot;
+
         private CameraState[] m_RuntimeStates;
         private ICameraStateController m_StateController;
+        private float m_CurrentZoom;
+        private float m_CurrentFov;
+        private bool m_OverrideCameraOffset;
+        private Vector3 m_OverrideCameraOffsetValue;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -59,9 +78,9 @@ namespace ThirdPersonController
         {
             currentState = m_DefaultCameraState;
 
-            #pragma warning disable 612,618
-            m_RuntimeStates = m_CameraStates.Concat(new [] { m_DefaultCameraState }).ToArray();
-            #pragma warning restore 612,618
+#pragma warning disable 612, 618
+            m_RuntimeStates = m_CameraStates.Concat(new[] { m_DefaultCameraState }).ToArray();
+#pragma warning restore 612, 618
         }
 
         /// <summary>
@@ -94,20 +113,22 @@ namespace ThirdPersonController
                 return;
             }
 
-            DoUpdate();
+            ManualUpdate();
         }
 
         /// <summary>
         /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
         /// </summary>
-        protected virtual void FixedUpdate()
+        protected override void FixedUpdate()
         {
+            base.FixedUpdate();
+
             if (m_FollowMode != ThirdPersonCameraFollowMode.FixedUpdate)
             {
                 return;
             }
 
-            DoUpdate();
+            ManualUpdate();
         }
 
         /// <summary>
@@ -121,25 +142,47 @@ namespace ThirdPersonController
                 return;
             }
 
-            DoUpdate();
+            ManualUpdate();
         }
 
-        public virtual void DoUpdate()
+        public virtual void ManualUpdate()
         {
             FollowTarget();
         }
 
         protected virtual void UpdateCamera()
         {
-            m_Camera.transform.localPosition = Vector3.Lerp(
-                m_Camera.transform.localPosition, 
-                currentState.cameraOffset, 
-                currentState.cameraPositionLerpRate * Time.deltaTime);
+            UpdateCameraLocalPos();
+            UpdateCameraFov();
 
-            m_Camera.fieldOfView = Mathf.Lerp(
-                m_Camera.fieldOfView,
+        }
+
+        protected virtual void UpdateCameraFov()
+        {
+            m_CurrentFov = Mathf.Lerp(
+                m_CurrentFov,
                 m_FieldOfView * currentState.FieldOfViewMultiplier,
                 currentState.cameraFovLerpRate * Time.deltaTime);
+
+            m_Camera.fieldOfView = m_CurrentFov - m_CurrentZoom;
+        }
+
+        protected virtual void UpdateCameraLocalPos()
+        {
+            Vector3 pos;
+            if (m_OverrideCameraOffset)
+            {
+                pos = m_OverrideCameraOffsetValue;
+            }
+            else
+            {
+                pos = Vector3.Lerp(
+                    m_Camera.transform.localPosition,
+                    currentState.cameraOffset,
+                    currentState.cameraPositionLerpRate * Time.deltaTime);
+            }
+
+            m_Camera.transform.localPosition = pos;
         }
 
         protected virtual void FollowTarget()
@@ -189,6 +232,27 @@ namespace ThirdPersonController
         {
             this.m_Target = target;
             m_StateController = target.GetComponent<ICameraStateController>();
+        }
+
+        /// <summary>
+        /// Sets the zoom level of this camera.
+        /// </summary>
+        /// <param name="zoomLevel">The zoom level (multiplied by the fov)</param>
+        public virtual void Zoom(float zoomLevel)
+        {
+            this.m_CurrentZoom = zoomLevel;
+        }
+
+        protected override void SetCameraOffset(Vector3 offset)
+        {
+            this.m_OverrideCameraOffset = true;
+            this.m_OverrideCameraOffsetValue = offset;
+        }
+
+        protected override void ResetCameraOffset()
+        {
+            this.m_OverrideCameraOffset = false;
+            this.m_OverrideCameraOffsetValue = Vector3.zero;
         }
     }
 }
