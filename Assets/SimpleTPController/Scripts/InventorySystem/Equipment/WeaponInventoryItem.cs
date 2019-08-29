@@ -113,5 +113,15 @@ namespace ThirdPersonController.InventorySystem
         {
             get { return m_CanUseAirally; }
         }
+
+        [SerializeField] private float m_Damage = 10;
+
+        /// <summary>
+        /// The amount of damage this weapon deals.
+        /// </summary>
+        public float damage
+        {
+            get { return m_Damage; }
+        }
     }
 }

@@ -1,13 +1,18 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace ThirdPersonController.InventorySystem
 {
+    /// <summary>
+    /// Describes a melee weapon item instance.
+    /// </summary>
     public class MeleeWeaponItemInstance : WeaponItemInstanceBase<MeleeWeaponInventoryItem>
     {
         [Header("Melee Settings")]
         [SerializeField] private Collider m_BoundingBox = null;
         
-        private float m_DamageTimer;
+        private IEnumerator m_DamageWindow;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -23,28 +28,30 @@ namespace ThirdPersonController.InventorySystem
         /// </summary>
         protected virtual void OnDisable()
         {
-            m_DamageTimer = 0f;
-        }
-
-        /// <summary>
-        /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
-        /// </summary>
-        protected virtual void FixedUpdate()
-        {
-            if (item.kind == WeaponKind.Primary)
-            {
-                if (Time.fixedTime > m_DamageTimer && m_BoundingBox.enabled)
-                {
-                    m_BoundingBox.enabled = false;
-                }
-            }
+            CancelDamage();
         }
 
         protected override bool OnPrimaryUse(Vector3 point)
         {
-            m_BoundingBox.enabled = true;
-            m_DamageTimer = Time.fixedTime + item.damageCooldown;
+            m_DamageWindow = RunDamageWindow();
+            StartCoroutine(RunDamageWindow());
             return true;
+        }
+
+        public void CancelDamage()
+        {
+            if (m_DamageWindow != null)
+            {
+                StopCoroutine(m_DamageWindow);
+            }
+        }
+
+        protected virtual IEnumerator RunDamageWindow()
+        {
+            yield return new WaitForSeconds(item.damageDelay);
+            m_BoundingBox.enabled = true;
+            yield return new WaitForSeconds(item.damageCooldown);
+            m_BoundingBox.enabled = false;
         }
 
         protected override void OnSecondaryUse(Vector3 usePoint, bool use)
@@ -58,7 +65,16 @@ namespace ThirdPersonController.InventorySystem
         /// <param name="other">The other Collider involved in this collision.</param>
         protected virtual void OnTriggerEnter(Collider other)
         {
-            // TODO: Deal damage!
+            var hitbox = other.GetComponent<HitBox>();
+            if (hitbox == null)
+            {
+                return;
+            }
+            
+            var hitPoint = other.ClosestPoint(transform.position);
+            var damageInfo = new DamageInfo(handler.gameObject, hitPoint, item.damage);
+            hitbox.OnDamage(damageInfo);
+            CancelDamage();
         }
     }
 }

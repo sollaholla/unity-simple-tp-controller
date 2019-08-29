@@ -23,6 +23,11 @@ namespace ThirdPersonController.InventorySystem
         public EquippableInventoryItem equippableData => item;
 
         /// <summary>
+        /// The active equipment handler that has equipped this item.
+        /// </summary>
+        public EquipmentHandler handler { get; private set; }
+
+        /// <summary>
         /// Callback for when this equippable item is equipped.
         /// </summary>
         /// <param name="handler">The handler that equipped this item.</param>
@@ -30,6 +35,7 @@ namespace ThirdPersonController.InventorySystem
         {
             isEquipped = true;
             this.instanceData = data;
+            this.handler = handler;
         }
 
         /// <summary>
@@ -40,6 +46,7 @@ namespace ThirdPersonController.InventorySystem
         {
             isEquipped = false;
             this.instanceData = null;
+            this.handler = null;
         }
     }
 }
