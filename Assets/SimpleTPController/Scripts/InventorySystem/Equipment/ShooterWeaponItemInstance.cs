@@ -20,6 +20,11 @@ namespace ThirdPersonController.InventorySystem
 
             var targetRotation = Quaternion.LookRotation((target - m_ProjectileSpawnPoint.position).normalized);
             var projectile = Instantiate(item.ammoItemType.projectilePrefab, m_ProjectileSpawnPoint.position, targetRotation);
+            var projectileData = projectile.GetComponent<IProjectile>();
+            if (projectileData != null)
+            {
+                projectileData.OnSpawn(handler.gameObject, item.damage);
+            }
             
             currentAmmo--;
             return true;

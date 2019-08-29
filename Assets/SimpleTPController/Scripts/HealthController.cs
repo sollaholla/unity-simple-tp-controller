@@ -6,7 +6,7 @@ namespace ThirdPersonController
     /// <summary>
     /// Controls health, damage, and death.
     /// </summary>
-    public class HealthController : MonoBehaviour
+    public class HealthController : MonoBehaviour, IDamageReceiver
     {
         [SerializeField] private float m_MaxHealth = 100;
 
@@ -88,7 +88,7 @@ namespace ThirdPersonController
             isDead = true;
             health = 0;
         }
-        
+
         protected virtual void ReduceHealth(float damage)
         {
             health -= damage;

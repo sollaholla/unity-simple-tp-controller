@@ -28,4 +28,6 @@ MonoBehaviour:
   m_WeaponKind: 0
   m_WeaponOccupation: 0
   m_CanUseAirally: 0
+  m_Damage: 10
   m_DamageCooldown: 0.5
+  m_DamageDelay: 0.25

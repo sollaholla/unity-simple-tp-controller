@@ -15,5 +15,15 @@ namespace ThirdPersonController.InventorySystem
         {
             get { return m_DamageCooldown; }
         }
+        
+        [SerializeField] private float m_DamageDelay = 0.5f;
+
+        /// <summary>
+        /// The amount of delay before applying damage.
+        /// </summary>
+        public float damageDelay
+        {
+            get { return m_DamageDelay; }
+        }
     }
 }
