@@ -7,12 +7,13 @@ namespace ThirdPersonController.InventorySystem
     [RequireComponent(typeof(EquipmentHandler))]
     [RequireComponent(typeof(Inventory))]
     [RequireComponent(typeof(CharacterMotor))]
-    public class WeaponHandler : MonoBehaviour
+    public class WeaponHandler : MonoBehaviour, ICharacterMoveSpeedFilter
     {
         private EquipmentHandler m_EquipmentHandler;
         private Inventory m_Inventory;
         private CharacterMotor m_CharacterMotor;
         private IWeaponHandlerBehaviourOverride[] m_BehaviourOverrides;
+        private bool m_WalkMode;
 
         /// <summary>
         /// The currently equipped (primary) weapon.
@@ -105,11 +106,13 @@ namespace ThirdPersonController.InventorySystem
         /// </summary>
         /// <param name="useDirection">The direction that the weapon was used (e.g. aim direction).</param>
         /// <param name="use">Set to true to use this item now.</param>
-        public virtual void SecondaryUse(Vector3 useDirection, bool use)
+        /// <param name="walkMode">Use walk mode on the character when in secondary use.</param>
+        public virtual void SecondaryUse(Vector3 useDirection, bool use, bool walkMode = true)
         {
             if (secondaryWeapon == null)
             {
                 usingSecondary = false;
+                m_WalkMode = false;
                 return;
             }
 
@@ -131,6 +134,7 @@ namespace ThirdPersonController.InventorySystem
             secondaryUseDirection = useDirection;
             secondaryWeapon.SecondaryUse(useDirection, use);
             usingSecondary = use;
+            m_WalkMode = use && walkMode;
         }
 
         protected virtual void OnEquippedItem(IEquippableItemInstance item)
@@ -244,7 +248,13 @@ namespace ThirdPersonController.InventorySystem
             if (secondaryWeapon == null)
             {
                 usingSecondary = false;
+                m_WalkMode = true;
             }
+        }
+
+        public float GetMoveSpeedMultiplier()
+        {
+            return m_WalkMode ? 0.5f : 1f;
         }
     }
 }

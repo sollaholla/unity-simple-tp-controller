@@ -16,6 +16,7 @@ namespace ThirdPersonController
         private Vector3 m_Motion;
         private bool m_ResetGroundStickForce;
         private float m_LockTimer;
+        private ICharacterMoveSpeedFilter[] m_MoveSpeedFilters;
 
         /// <summary>
         /// Gets a value indicating whether the character is on the ground.
@@ -54,6 +55,7 @@ namespace ThirdPersonController
         protected virtual void Awake()
         {
             m_CharacterController = GetComponent<CharacterController>();
+            m_MoveSpeedFilters = GetComponents<ICharacterMoveSpeedFilter>();
         }
 
         /// <summary>
@@ -149,10 +151,16 @@ namespace ThirdPersonController
         /// </summary>
         protected virtual float GetDesiredMovementSpeed()
         {
-            return 
-                isSprinting ? m_MovementSettings.sprintSpeed : 
-                isCrouching ? m_MovementSettings.crouchSpeed : 
+            float desiredSpeed = isSprinting ? m_MovementSettings.sprintSpeed :
+                isCrouching ? m_MovementSettings.crouchSpeed :
                 m_MovementSettings.walkSpeed;
+
+            foreach (var filter in m_MoveSpeedFilters)
+            {
+                desiredSpeed *= filter.GetMoveSpeedMultiplier();
+            }
+
+            return desiredSpeed;
         }
 
         /// <summary>
