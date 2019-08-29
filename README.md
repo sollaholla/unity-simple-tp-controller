@@ -22,4 +22,6 @@ and much more!
 ## Damage
 Integrates a basic and expandable damage system.
 
-![Melee setup](https://imgur.com/lhF1XU6)
+
+
+![Melee setup](https://i.imgur.com/lhF1XU6.png)
