@@ -7,13 +7,12 @@ namespace ThirdPersonController.InventorySystem
     [RequireComponent(typeof(EquipmentHandler))]
     [RequireComponent(typeof(Inventory))]
     [RequireComponent(typeof(CharacterMotor))]
-    public class WeaponHandler : MonoBehaviour, ICharacterMoveSpeedFilter
+    public class WeaponHandler : MonoBehaviour
     {
         private EquipmentHandler m_EquipmentHandler;
         private Inventory m_Inventory;
         private CharacterMotor m_CharacterMotor;
         private IWeaponHandlerBehaviourOverride[] m_BehaviourOverrides;
-        private bool m_WalkMode;
 
         /// <summary>
         /// The currently equipped (primary) weapon.
@@ -48,12 +47,17 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// True if the <see cref="secondaryWeapon" /> is being used.
         /// </summary>
-        public bool usingSecondary { get; private set; }
+        public bool aiming { get; private set; }
+
+        /// <summary>
+        /// True if we're in walk mode while using secondary.
+        /// </summary>
+        public bool aimingWalkMode { get; private set; }
 
         /// <summary>
         /// The direction in which the <see cref="secondaryWeapon" /> was used.
         /// </summary>
-        public Vector3 secondaryUseDirection { get; private set; }
+        public Vector3 aimDirection { get; private set; }
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -84,7 +88,7 @@ namespace ThirdPersonController.InventorySystem
                 return;
             }
 
-            if (usingSecondary && secondaryWeapon != primaryWeapon)
+            if (aiming && secondaryWeapon != primaryWeapon)
             {
                 return;
             }
@@ -102,39 +106,53 @@ namespace ThirdPersonController.InventorySystem
         }
 
         /// <summary>
-        /// Use the <see cref="secondaryWeapon" />.
+        /// Aim the secondary weapon.
         /// </summary>
-        /// <param name="useDirection">The direction that the weapon was used (e.g. aim direction).</param>
-        /// <param name="use">Set to true to use this item now.</param>
+        /// <param name="aimDirection">The direction to aim.</param>
+        /// <param name="toggle">Toggle the aiming state.</param>
         /// <param name="walkMode">Use walk mode on the character when in secondary use.</param>
-        public virtual void SecondaryUse(Vector3 useDirection, bool use, bool walkMode = true)
+        public virtual void Aim(Vector3 aimDirection, bool toggle, bool walkMode = true)
         {
             if (secondaryWeapon == null)
             {
-                usingSecondary = false;
-                m_WalkMode = false;
+                ResetSecondary();
                 return;
             }
 
+            toggle = CanAim(aimDirection, toggle);
+            secondaryWeapon.SecondaryUse(aimDirection, toggle);
+
+            this.aimDirection = aimDirection;
+            this.aiming = toggle;
+            this.aimingWalkMode = toggle && walkMode;
+
+            m_CharacterMotor.SetWalkMode(this.aimingWalkMode);
+        }
+
+        /// <summary>
+        /// True if this weapon handler can aim.
+        /// </summary>
+        /// <param name="aimDirection">The aim direction.</param>
+        /// <param name="toggle">True if we're toggling aim.</param>
+        /// <returns></returns>
+        public virtual bool CanAim(Vector3 aimDirection, bool toggle)
+        {
             if (!m_CharacterMotor.isGrounded && !secondaryWeapon.weaponData.canUseAirially)
             {
-                use = false;
+                return false;
             }
 
             if (m_CharacterMotor.isMovementLocked)
             {
-                use = false;
-            }
-            
-            if (!m_BehaviourOverrides.Any(x => x.CanUseSecondary(useDirection, use, secondaryWeapon)))
-            {
-                use = false;
+                return false;
             }
 
-            secondaryUseDirection = useDirection;
-            secondaryWeapon.SecondaryUse(useDirection, use);
-            usingSecondary = use;
-            m_WalkMode = use && walkMode;
+            if (!m_BehaviourOverrides.Any(x => x.CanUseSecondary(aimDirection, toggle, secondaryWeapon)))
+            {
+                return false;
+            }
+
+            return toggle;
         }
 
         protected virtual void OnEquippedItem(IEquippableItemInstance item)
@@ -158,6 +176,10 @@ namespace ThirdPersonController.InventorySystem
                     break;
                 case WeaponKind.Secondary:
                     SetSecondaryWeapon(weaponItem);
+                    if (weaponItem.weaponData.occupation == WeaponOccupation.TwoHanded)
+                    {
+                        SetPrimaryWeapon(weaponItem);
+                    }
                     break;
             }
         }
@@ -247,14 +269,15 @@ namespace ThirdPersonController.InventorySystem
 
             if (secondaryWeapon == null)
             {
-                usingSecondary = false;
-                m_WalkMode = true;
+                ResetSecondary();
             }
         }
 
-        public float GetMoveSpeedMultiplier()
+        protected virtual void ResetSecondary()
         {
-            return m_WalkMode ? 0.5f : 1f;
+            aiming = false;
+            aimingWalkMode = false;
+            m_CharacterMotor.SetWalkMode(aimingWalkMode);
         }
     }
 }

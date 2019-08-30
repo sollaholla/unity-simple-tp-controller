@@ -50,7 +50,7 @@ namespace ThirdPersonController.InventorySystem
             }
 
             var hipFire = m_WeaponHandler.isTwoHanded && m_PrimaryInput && !m_SecondaryInput;
-            m_WeaponHandler.SecondaryUse(cam.transform.forward, m_SecondaryInput || hipFire || m_InputSettings.debugAim, !hipFire);
+            m_WeaponHandler.Aim(cam.transform.forward, m_SecondaryInput || hipFire || m_InputSettings.debugAim, !hipFire);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace ThirdPersonController.InventorySystem
         {
             if (m_WeaponHandler.isTwoHanded && m_WeaponHandler.primaryWeapon is ShooterWeaponItemInstance shooterWeapon)
             {
-                if (m_WeaponHandler.usingSecondary && m_SecondaryInput)
+                if (m_WeaponHandler.aiming && m_SecondaryInput)
                 {
                     SetWeaponZoom(shooterWeapon.item.zoomLevel, shooterWeapon.item.zoomSpeed);
                 }

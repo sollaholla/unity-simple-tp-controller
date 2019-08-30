@@ -35,5 +35,17 @@ namespace ThirdPersonController.InventorySystem
         {
             get { return m_ZoomSpeed; }
         }
+
+        [SerializeField] private float m_RecoilStrengthX = 0.005f;
+        public float recoilStrengthX
+        {
+            get { return m_RecoilStrengthX; }
+        }
+
+        [SerializeField] private float m_RecoilStrengthY = 0.015f;
+        public float recoilStrengthY
+        {
+            get { return m_RecoilStrengthY; }
+        }
     }
 }

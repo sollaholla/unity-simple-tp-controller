@@ -28,6 +28,7 @@ namespace ThirdPersonController
         [Header("Settings")]
         [SerializeField] private ThirdPersonCameraFollowMode m_FollowMode = ThirdPersonCameraFollowMode.FixedUpdate;
         [SerializeField] private float m_FieldOfView = 60;
+        [SerializeField] private float m_RotationDampSpeed = 15f;
 
         [Header("Camera States")]
         [SerializeField] private CameraState m_DefaultCameraState = new CameraState("Default");
@@ -70,6 +71,8 @@ namespace ThirdPersonController
         private float m_CurrentFov;
         private bool m_OverrideCameraOffset;
         private Vector3 m_OverrideCameraOffsetValue;
+        private float m_DesiredX;
+        private float m_DesiredY;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -218,10 +221,17 @@ namespace ThirdPersonController
         /// <param name="yDelta">The y delta (i.e. mouse y delta)</param>
         public virtual void Rotate(float xDelta, float yDelta)
         {
-            xRotation += yDelta * currentState.sensitivityMultiplier;
-            yRotation += xDelta * currentState.sensitivityMultiplier;
-            xRotation = Mathf.Clamp(xRotation, currentState.minimumXAngle, currentState.maximumXAngle);
-            m_Pivot.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+            m_DesiredX += yDelta * currentState.sensitivityMultiplier;
+            m_DesiredY += xDelta * currentState.sensitivityMultiplier;
+            m_DesiredX = Mathf.Clamp(m_DesiredX, currentState.minimumXAngle, currentState.maximumXAngle);
+
+            m_Pivot.rotation = Quaternion.Lerp(
+                m_Pivot.rotation, 
+                Quaternion.Euler(m_DesiredX, m_DesiredY, 0), 
+                Time.fixedDeltaTime * m_RotationDampSpeed);
+
+            xRotation = m_Pivot.eulerAngles.x;
+            yRotation = m_Pivot.eulerAngles.y;
         }
 
         /// <summary>
@@ -253,6 +263,17 @@ namespace ThirdPersonController
         {
             this.m_OverrideCameraOffset = false;
             this.m_OverrideCameraOffsetValue = Vector3.zero;
+        }
+
+        /// <summary>
+        /// Apply recoil to this camera.
+        /// </summary>
+        /// <param name="recoilStrengthX">The recoil strength on the x axis.</param>
+        /// <param name="recoilStrengthY">The recoil strength on the y axis.</param>
+        public virtual void Recoil(float recoilStrengthX, float recoilStrengthY)
+        {
+            m_DesiredY += UnityEngine.Random.Range(-recoilStrengthX, recoilStrengthX) * 90;
+            m_DesiredX += UnityEngine.Random.Range(-recoilStrengthY, 0) * 90;
         }
     }
 }
