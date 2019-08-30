@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Item_AssaultRifle
   m_EditorClassIdentifier: 
   m_ID: 7827d78a-53af-4a9d-91a8-809193978d17
-  m_DisplayName: 
+  m_DisplayName: Assault Rifle
   m_Icon: {fileID: 0}
   m_MaxStack: 1
   m_DropObject: {fileID: 7886049660709877336, guid: 4f1ae262f4fd37b4ab68e7538dffffc7,
@@ -23,12 +23,16 @@ MonoBehaviour:
   m_PrimaryAnimationType: 2
   m_SecondaryAnimationType: 1
   m_AttackAnimationParam: Shoot
-  m_PrimaryCooldown: 0.1
+  m_PrimaryCooldown: 0.15
   m_MovementCooldown: 0
   m_WeaponKind: 0
   m_WeaponOccupation: 1
   m_CanUseAirally: 1
+  m_Damage: 10
   m_MaxAmmo: 15
   m_AmmoItemType: {fileID: 11400000, guid: 21bde286226472a49ab3ef2b1aff3377, type: 2}
+  m_ReloadDuration: 1.5
   m_ZoomLevel: 30
   m_ZoomSpeed: 10
+  m_RecoilStrengthX: 0.02
+  m_RecoilStrengthY: 0.1

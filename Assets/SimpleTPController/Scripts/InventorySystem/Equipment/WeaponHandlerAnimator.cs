@@ -51,7 +51,7 @@ namespace ThirdPersonController.InventorySystem
             AnimateForWeapon(m_WeaponHandler.primaryWeapon, m_AnimatorSettings.primaryWeaponTypeParam);
             AnimateForWeapon(m_WeaponHandler.secondaryWeapon, m_AnimatorSettings.secondaryWeaponTypeParam);
 
-            if (m_WeaponHandler.secondaryWeapon != null && m_WeaponHandler.usingSecondary)
+            if (m_WeaponHandler.secondaryWeapon != null && m_WeaponHandler.aiming)
             {
                 m_Animator.SetBool(m_AnimatorSettings.secondaryUseAnimationParam, true);
             }
@@ -97,7 +97,7 @@ namespace ThirdPersonController.InventorySystem
                 return;
             }
 
-            if (m_WeaponHandler.usingSecondary && !BlockIK())
+            if (m_WeaponHandler.aiming && !BlockIK())
             {
                 m_AimWeight = Mathf.Lerp(m_AimWeight, 1f, Time.deltaTime * m_AnimatorSettings.aimSmoothRate);
             }
@@ -107,7 +107,7 @@ namespace ThirdPersonController.InventorySystem
             }
 
             var spineBone = m_Animator.GetBoneTransform(HumanBodyBones.Spine);
-            var rotation = Quaternion.LookRotation(m_WeaponHandler.secondaryUseDirection);
+            var rotation = Quaternion.LookRotation(m_WeaponHandler.aimDirection);
 
             spineBone.transform.rotation = Quaternion.Lerp(
                 spineBone.transform.rotation,

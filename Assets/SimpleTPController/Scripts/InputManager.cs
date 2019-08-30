@@ -23,6 +23,30 @@ namespace ThirdPersonController
         }
 
         /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
+        protected virtual void Awake()
+        {
+            if (m_Instance == null)
+            {
+                m_Instance = this;
+            }
+            else if (m_Instance != this)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        /// <summary>
+        /// Start is called on the frame when a script is enabled just before
+        /// any of the Update methods is called the first time.
+        /// </summary>
+        protected virtual void Start()
+        {
+            LockCursor();
+        }
+
+        /// <summary>
         /// This function is called when the object becomes enabled and active.
         /// </summary>
         protected virtual void OnEnable()
@@ -33,10 +57,11 @@ namespace ThirdPersonController
 
         protected virtual void WindowClosed(UIWindow window)
         {
-            m_OpenedWindows--;
+            m_OpenedWindows = Mathf.Max(0, m_OpenedWindows - 1);
             if (m_OpenedWindows == 0)
             {
                 m_InputBlocked = false;
+                LockCursor();
             }
         }
 
@@ -44,6 +69,19 @@ namespace ThirdPersonController
         {
             m_OpenedWindows++;
             m_InputBlocked = true;
+            UnlockCursor();
+        }
+
+        private static void LockCursor()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        private static void UnlockCursor()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
         public static bool GetButtonDown(string buttonName)

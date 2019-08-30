@@ -26,6 +26,6 @@ namespace ThirdPersonController.InventorySystem
         /// <summary>
         /// Use this weapon in a secondary context.
         /// </summary>
-        void SecondaryUse(Vector3 direction, bool use);
+        void SecondaryUse(Vector3 direction, bool toggle);
     }
 }

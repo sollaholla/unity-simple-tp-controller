@@ -5,11 +5,22 @@ namespace ThirdPersonController.InventorySystem
     public class ShooterWeaponItemInstance : WeaponItemInstanceBase<ShooterWeaponInventoryItem>
     {
         [SerializeField] private Transform m_ProjectileSpawnPoint = null;
+        [SerializeField] private ParticleSystem m_MuzzleFlashParticles = null;
+        [SerializeField] private float m_ParticlesDuration = 0.1f;
 
         /// <summary>
         /// The current ammunition that is loaded in this weapon.
         /// </summary>
         public uint currentAmmo { get; private set; }
+
+        /// <summary>
+        /// Awake is called when the script instance is being loaded.
+        /// </summary>
+        protected virtual void Awake()
+        {
+            m_MuzzleFlashParticles?.Stop();
+            m_MuzzleFlashParticles?.gameObject.SetActive(false);
+        }
 
         protected override bool OnPrimaryUse(Vector3 target)
         {
@@ -25,9 +36,22 @@ namespace ThirdPersonController.InventorySystem
             {
                 projectileData.OnSpawn(handler.gameObject, item.damage);
             }
+
+            if (m_MuzzleFlashParticles != null)
+            {
+                m_MuzzleFlashParticles.gameObject.SetActive(true);
+                m_MuzzleFlashParticles.Play(true);
+                Invoke(nameof(StopParticles), m_ParticlesDuration);
+            }
             
             currentAmmo--;
             return true;
+        }
+
+        protected virtual void StopParticles()
+        {
+            m_MuzzleFlashParticles?.Stop(true);
+            m_MuzzleFlashParticles?.gameObject.SetActive(false);
         }
 
         /// <summary>

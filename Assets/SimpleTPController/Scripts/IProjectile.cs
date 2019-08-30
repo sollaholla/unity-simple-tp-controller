@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace ThirdPersonController
 {
+    public delegate void HitDelegate(Vector3 point, Vector3 normal, Collider hitCollider);
+
     /// <summary>
     /// Describes a projectile.
     /// </summary>
@@ -11,7 +13,7 @@ namespace ThirdPersonController
         /// <summary>
         /// Invoked when this projectile hits something.
         /// </summary>
-        event Action<Vector3> hit;
+        event HitDelegate hit;
 
         /// <summary>
         /// Initializes this projectile.

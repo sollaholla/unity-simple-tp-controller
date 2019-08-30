@@ -15,7 +15,7 @@ namespace ThirdPersonController
         /// <summary>
         /// Called when this hitscan projectile has hit something.
         /// </summary>
-        public event Action<Vector3> hit;
+        public event HitDelegate hit;
 
         private GameObject m_Owner;
         private float m_Damage;
@@ -50,7 +50,7 @@ namespace ThirdPersonController
                 {
                     var damageInfo = new DamageInfo(m_Owner, hit.point, m_Damage);
                     hitBox.OnDamage(damageInfo);
-                    this.hit?.Invoke(hit.point);
+                    this.hit?.Invoke(hit.point, hit.normal, hit.collider);
                 }
             }
 

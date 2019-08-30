@@ -16,6 +16,7 @@ namespace ThirdPersonController
         private Vector3 m_Motion;
         private bool m_ResetGroundStickForce;
         private float m_LockTimer;
+        private bool m_WalkMode;
 
         /// <summary>
         /// Gets a value indicating whether the character is on the ground.
@@ -74,7 +75,7 @@ namespace ThirdPersonController
                 }
 
                 isCrouching = crouch;
-                isSprinting = sprint && !isCrouching && x != 0 && z != 0;
+                isSprinting = sprint && !isCrouching && x != 0 && z != 0 && !m_WalkMode;
 
                 m_Motion = new Vector3(x, 0, z).normalized * GetDesiredMovementSpeed();
                 m_Motion += Physics.gravity * m_PhysicsSettings.groundStickForceMultiplier;
@@ -149,10 +150,17 @@ namespace ThirdPersonController
         /// </summary>
         protected virtual float GetDesiredMovementSpeed()
         {
-            return 
-                isSprinting ? m_MovementSettings.sprintSpeed : 
-                isCrouching ? m_MovementSettings.crouchSpeed : 
+            if (m_WalkMode)
+            {
+                return isCrouching ? m_MovementSettings.crouchSpeed : m_MovementSettings.walkSpeed;
+            }
+
+            float desiredSpeed = 
+                isSprinting ? m_MovementSettings.sprintSpeed :
+                isCrouching ? m_MovementSettings.crouchSpeed :
                 m_MovementSettings.walkSpeed;
+
+            return desiredSpeed;
         }
 
         /// <summary>
@@ -162,6 +170,15 @@ namespace ThirdPersonController
         public virtual void MoveLock(float time)
         {
             m_LockTimer = Time.fixedTime + time;
+        }
+
+        /// <summary>
+        /// Sets the character into walk mode.
+        /// </summary>
+        /// <param name="walkMode"></param>
+        public virtual void SetWalkMode(bool walkMode)
+        {
+            this.m_WalkMode = walkMode;
         }
     }
 }
