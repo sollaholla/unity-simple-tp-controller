@@ -73,11 +73,7 @@ namespace ThirdPersonController.InventorySystem
             get { return m_PrimaryCooldown; }
         }
 
-        [SerializeField] private float m_MovementCooldown = 1f;
-
-        /// <summary>
-        /// Once this item is successfuly used this will freeze the characters movement for the given time (seconds).
-        /// </summary>
+        [SerializeField] private float m_MovementCooldown = 0.75f;
         public float movementCooldown
         {
             get { return m_MovementCooldown; }
@@ -122,6 +118,14 @@ namespace ThirdPersonController.InventorySystem
         public float damage
         {
             get { return m_Damage; }
+        }
+
+        [Header("Melee")]
+        [SerializeField] private int m_MeleeHitboxID = 0;
+        public int meleeHitboxID
+        {
+            get { return m_MeleeHitboxID; }
+            set { m_MeleeHitboxID = value; }
         }
     }
 }

@@ -160,18 +160,27 @@ namespace ThirdPersonController.InventorySystem
                 return false;
             }
 
-            int index = GetFirstEmptySlot();
+            int index = GetFirstAllowedSlot(itemData);
             SetSlot(itemData, (uint)index);
 
             return true;
         }
 
         /// <summary>
-        /// Gets the first empty slot in this collection.
+        /// Gets the first slot in this collection that allows the given item.
         /// </summary>
-        public virtual int GetFirstEmptySlot()
+        /// <param name="itemData">The item data.</param>
+        public virtual int GetFirstAllowedSlot(ItemDataInstance itemData)
         {
-            return Array.FindIndex(m_Items, x => x == null);
+            for (uint i = 0; i < m_Items.Length; i++)
+            {
+                if (m_Items[i] == null && SlotAllows(itemData, i))
+                {
+                    return (int)i;
+                }
+            }
+
+            return -1;
         }
 
         /// <summary>

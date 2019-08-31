@@ -35,9 +35,23 @@ namespace ThirdPersonController
 
         [Range(0, 10)]
         [SerializeField] private float m_GroundStickForceMultiplier = 1f;
+
         public float groundStickForceMultiplier
         {
             get { return m_GroundStickForceMultiplier; }
+        }
+
+        [SerializeField] private LayerMask m_HeadCheckLayers = Physics.DefaultRaycastLayers;
+        public LayerMask headCheckLayers
+        {
+            get { return m_HeadCheckLayers; }
+        }
+
+        [Range(0.1f, 5)]
+        [SerializeField] private float m_HeadCheckDistance = 2.1f;
+        public float headCheckDistance
+        {
+            get { return m_HeadCheckDistance; }
         }
     }
 }

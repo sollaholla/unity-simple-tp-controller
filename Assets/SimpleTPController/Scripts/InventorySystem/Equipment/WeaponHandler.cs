@@ -83,6 +83,11 @@ namespace ThirdPersonController.InventorySystem
                 return;
             }
 
+            if (m_CharacterMotor.isMovementLocked)
+            {
+                return;
+            }
+
             if (!m_CharacterMotor.isGrounded && !primaryWeapon.weaponData.canUseAirially)
             {
                 return;

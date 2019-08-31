@@ -1,6 +1,7 @@
 using System;
 using ThirdPersonController.UI;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ThirdPersonController.InventorySystem.UI
@@ -8,7 +9,7 @@ namespace ThirdPersonController.InventorySystem.UI
     /// <summary>
     /// A user interface representation of an inventory item slot.
     /// </summary>
-    public class UIItemSlot : UIDragTransferHandler<ItemDataInstance>
+    public class UIItemSlot : UIDragTransferHandler<ItemDataInstance>, IPointerDownHandler
     {
         [SerializeField] private Image m_IconImage = null;
         [SerializeField] private TMPro.TMP_Text m_StackText = null;
@@ -127,6 +128,20 @@ namespace ThirdPersonController.InventorySystem.UI
 
             var inventory = uiItemCollection.itemCollection.inventory;
             inventory.MoveItem(data, uiItemCollection.itemCollection, this.slot);
+        }
+
+        public virtual void OnPointerDown(PointerEventData eventData)
+        {
+            if (this.itemData == null)
+            {
+                return;
+            }
+
+            if (eventData.button == PointerEventData.InputButton.Right)
+            {
+                var inventory = uiItemCollection.itemCollection.inventory;
+                inventory.AutoMoveItem(this.itemData, false);
+            }
         }
     }
 }

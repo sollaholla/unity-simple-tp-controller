@@ -10,6 +10,7 @@ namespace ThirdPersonController.InventorySystem
     /// </summary>
     [RequireComponent(typeof(WeaponHandler))]
     [RequireComponent(typeof(Inventory))]
+    [RequireComponent(typeof(CharacterMotor))]
     public class ShooterWeaponHandler : MonoBehaviour, IWeaponHandlerBehaviourOverride
     {
         [SerializeField] private string m_AmmoCollectionName = "Items";
@@ -23,6 +24,7 @@ namespace ThirdPersonController.InventorySystem
         private Inventory m_Inventory;
         private ItemCollection m_AmmoCollection;
         private IEnumerator m_ReloadEnumerator;
+        private CharacterMotor m_CharacterMotor;
 
         /// <summary>
         /// Awake is called when the script instance is being loaded.
@@ -31,6 +33,7 @@ namespace ThirdPersonController.InventorySystem
         {
             m_WeaponHandler = GetComponent<WeaponHandler>();
             m_Inventory = GetComponent<Inventory>();
+            m_CharacterMotor = GetComponent<CharacterMotor>();
             m_WeaponHandler.primaryWeaponChanged += OnPrimaryChanged;
         }
 
@@ -62,6 +65,11 @@ namespace ThirdPersonController.InventorySystem
         public virtual void Reload()
         {
             if (isReloading)
+            {
+                return;
+            }
+
+            if (m_CharacterMotor.isMovementLocked)
             {
                 return;
             }

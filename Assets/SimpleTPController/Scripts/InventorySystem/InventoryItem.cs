@@ -9,6 +9,18 @@ namespace ThirdPersonController.InventorySystem
     public class InventoryItem : InventoryIdentity
     {
         [Header("Metadata")]
+        [TextArea]
+        [SerializeField] private string m_Description = null;
+
+        /// <summary>
+        /// The description of this inventory item.
+        /// </summary>
+        /// <value></value>
+        public string description
+        {
+            get { return m_Description; }
+        }
+        
         [SerializeField] private Sprite m_Icon = null;
 
         /// <summary>

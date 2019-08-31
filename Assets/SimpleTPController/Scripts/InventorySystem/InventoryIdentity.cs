@@ -17,7 +17,7 @@ namespace ThirdPersonController.InventorySystem
         {
             get { return m_DisplayName; }
         }
-        
+
         public static InventoryIdentity LoadFromResources(string id)
         {
             return Resources.LoadAll<InventoryIdentity>(string.Empty).FirstOrDefault(x => x.id == id);

@@ -14,16 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ID: ca0a7b47-efc5-4779-b245-ecbe5005c1c0
   m_DisplayName: Shield
+  m_Description: Provides protection from dangerous projectiles and weapons.
   m_Icon: {fileID: 0}
   m_MaxStack: 1
   m_DropObject: {fileID: 4266653893829770627, guid: f751b226facaddd4b8bd75640d1b68e2,
     type: 3}
   m_Category: {fileID: 11400000, guid: 91b1474ca03962a418f1ac075142e784, type: 2}
   m_IKHand: 0
-  m_AnimationID: 0
+  m_PrimaryAnimationType: 0
+  m_SecondaryAnimationType: 0
   m_AttackAnimationParam: Attack
   m_PrimaryCooldown: 0
   m_MovementCooldown: 0
   m_WeaponKind: 1
   m_WeaponOccupation: 0
   m_CanUseAirally: 1
+  m_Damage: 10
+  m_MeleeHitboxID: 1
+  m_DamageCooldown: 1.5
+  m_DamageDelay: 0.5

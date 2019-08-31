@@ -53,10 +53,10 @@ MonoBehaviour:
   m_Pivot: {fileID: 7419157360777023527}
   m_FollowMode: 1
   m_FieldOfView: 90
-  m_RotationSmoothing: 15
+  m_RotationDampSpeed: 20
   m_DefaultCameraState:
     m_Name: Default
-    m_CameraOffset: {x: 0.58, y: 0.42, z: -1.11}
+    m_CameraOffset: {x: 0.5, y: 0.58, z: -1.15}
     m_FieldOfViewMultiplier: 1
     m_SensitivityMultiplier: 1
     m_MinimumXAngle: -70
@@ -65,7 +65,7 @@ MonoBehaviour:
     m_CameraFovLerpRate: 10
   m_CameraStates:
   - m_Name: Sprinting
-    m_CameraOffset: {x: 0.58, y: 0.42, z: -1.11}
+    m_CameraOffset: {x: 0.5, y: 0.35, z: -1.4}
     m_FieldOfViewMultiplier: 1.1
     m_SensitivityMultiplier: 1
     m_MinimumXAngle: -70
@@ -73,7 +73,15 @@ MonoBehaviour:
     m_CameraPositionLerpRate: 10
     m_CameraFovLerpRate: 7.5
   - m_Name: Crouching
-    m_CameraOffset: {x: 0.58, y: 0.2, z: -0.97}
+    m_CameraOffset: {x: 0.58, y: 0, z: -0.97}
+    m_FieldOfViewMultiplier: 0.95
+    m_SensitivityMultiplier: 1
+    m_MinimumXAngle: -70
+    m_MaximumXAngle: 70
+    m_CameraPositionLerpRate: 10
+    m_CameraFovLerpRate: 7.5
+  - m_Name: Aim
+    m_CameraOffset: {x: 0.58, y: 0.1, z: -0.97}
     m_FieldOfViewMultiplier: 0.95
     m_SensitivityMultiplier: 1
     m_MinimumXAngle: -70
@@ -248,7 +256,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7419157360777023520}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7419157360608286511}

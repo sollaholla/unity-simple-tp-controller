@@ -51,7 +51,7 @@ namespace ThirdPersonController
         protected virtual void FixedUpdate()
         {
             cameraController.Rotate(m_XInput, m_YInput);
-            transform.eulerAngles = new Vector3(0, cameraController.yRotation, 0);
+            m_CharacterMotor.Rotate(cameraController.yRotation);
         }
 
         public virtual string GetCurrentState()

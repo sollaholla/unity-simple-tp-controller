@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ID: ae629003-1e51-4667-8d40-c2602ef50d86
   m_DisplayName: Sword
+  m_Description: A long and sharp metallic sword. The next step up from a dagger.
   m_Icon: {fileID: 0}
   m_MaxStack: 1
   m_DropObject: {fileID: 5780616815016611418, guid: a81328e168471524896a006378305630,
@@ -23,11 +24,12 @@ MonoBehaviour:
   m_PrimaryAnimationType: 1
   m_SecondaryAnimationType: 0
   m_AttackAnimationParam: Attack
-  m_PrimaryCooldown: 0.6
-  m_MovementCooldown: 0.9
+  m_PrimaryCooldown: 0.7
+  m_MovementCooldown: 0.75
   m_WeaponKind: 0
   m_WeaponOccupation: 0
   m_CanUseAirally: 0
   m_Damage: 10
+  m_MeleeHitboxID: 1
   m_DamageCooldown: 0.5
   m_DamageDelay: 0.25

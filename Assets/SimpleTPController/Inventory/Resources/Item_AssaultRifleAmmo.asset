@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ID: ff65f66a-a872-4af3-a5c8-44736ce92c0d
   m_DisplayName: Assault Rifle Ammo
+  m_Description: Provides ammunition for assault rifles.
   m_Icon: {fileID: 0}
   m_MaxStack: 999
   m_DropObject: {fileID: 7448031280035422380, guid: f3fdf22ecb7b4f74d803a718976d54c4,

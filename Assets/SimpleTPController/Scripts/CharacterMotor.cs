@@ -74,7 +74,7 @@ namespace ThirdPersonController
                     x = z = 0;
                 }
 
-                isCrouching = crouch;
+                isCrouching = crouch || CheckCrouch();
                 isSprinting = sprint && !isCrouching && x != 0 && z != 0 && !m_WalkMode;
 
                 m_Motion = new Vector3(x, 0, z).normalized * GetDesiredMovementSpeed();
@@ -115,6 +115,18 @@ namespace ThirdPersonController
             }
 
             UpdateCrouch();
+        }
+
+        protected virtual bool CheckCrouch()
+        {
+            return 
+                Physics.SphereCast(
+                    transform.position, 
+                    m_CharacterController.radius, 
+                    Vector3.up, 
+                    out var hit, 
+                    m_PhysicsSettings.headCheckDistance, 
+                    m_PhysicsSettings.headCheckLayers);
         }
 
         protected virtual void UpdateCrouch()
@@ -179,6 +191,15 @@ namespace ThirdPersonController
         public virtual void SetWalkMode(bool walkMode)
         {
             this.m_WalkMode = walkMode;
+        }
+        
+        /// <summary>
+        /// Rotate the character to the given y rotation.
+        /// </summary>
+        /// <param name="yRotation">The y rotation.</param>
+        public virtual void Rotate(float yRotation)
+        {
+            transform.rotation = Quaternion.Euler(0, yRotation, 0);
         }
     }
 }

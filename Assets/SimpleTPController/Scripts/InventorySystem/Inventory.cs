@@ -146,6 +146,11 @@ namespace ThirdPersonController.InventorySystem
         /// <param name="itemData">The item data.</param>
         public virtual void AutoMoveItem(ItemDataInstance itemData, bool combineWithItems = true)
         {
+            if (itemData == null)
+            {
+                return;
+            }
+
             var collection = GetBestCollectionForItem(itemData);
             var currentSlot = (uint)m_ItemCollections.FirstOrDefault(x => x.Contains(itemData)).GetSlot(itemData);
             if (collection == null)
@@ -161,13 +166,15 @@ namespace ThirdPersonController.InventorySystem
 
                 if (itemData.stack > 0)
                 {
-                    if (collection.IsFullyOccupied())
+                    var allowedSlot = collection.GetFirstAllowedSlot(itemData);
+
+                    if (collection.IsFullyOccupied() || allowedSlot == -1)
                     {
                         DropItem(itemData);
                     }
                     else
                     {
-                        MoveItem(itemData, collection, (uint)collection.GetFirstEmptySlot());
+                        MoveItem(itemData, collection, (uint)allowedSlot);
                     }
                 }
                 else
